@@ -7,8 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmcomanApi", "AmcomanApi\Am
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50FFC0A5-4112-4F30-A631-DED56A7B60D6}"
 	ProjectSection(SolutionItems) = preProject
-		TAmcomanAPITest.http = TAmcomanAPITest.http
+		amcomanAPITest.http = amcomanAPITest.http
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mialco.amcoman.dal", "mialco.amcoman.dal\mialco.amcoman.dal.csproj", "{A88B373A-3B3A-432C-98DB-F7F3AD3C135B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mialco.amcoman.repository", "mialco.amcoman.repository\mialco.amcoman.repository.csproj", "{96AC27C0-1527-49E1-BFD1-596C514FE436}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mialco.amcoman.mockRepo", "mialco.amcoman.mockRepo\mialco.amcoman.mockRepo.csproj", "{46A29A13-2DC2-4F33-8986-566289767A95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +26,18 @@ Global
 		{0403816E-89CB-4893-9DEF-35CCC54C010E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0403816E-89CB-4893-9DEF-35CCC54C010E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0403816E-89CB-4893-9DEF-35CCC54C010E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A88B373A-3B3A-432C-98DB-F7F3AD3C135B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A88B373A-3B3A-432C-98DB-F7F3AD3C135B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A88B373A-3B3A-432C-98DB-F7F3AD3C135B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A88B373A-3B3A-432C-98DB-F7F3AD3C135B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96AC27C0-1527-49E1-BFD1-596C514FE436}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96AC27C0-1527-49E1-BFD1-596C514FE436}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96AC27C0-1527-49E1-BFD1-596C514FE436}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96AC27C0-1527-49E1-BFD1-596C514FE436}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46A29A13-2DC2-4F33-8986-566289767A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46A29A13-2DC2-4F33-8986-566289767A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46A29A13-2DC2-4F33-8986-566289767A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46A29A13-2DC2-4F33-8986-566289767A95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

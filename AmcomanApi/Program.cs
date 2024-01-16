@@ -1,4 +1,8 @@
 
+using mialco.amcoman.dal.Entity;
+using mialco.amcoman.mockRepo;
+using mialco.amcoman.repository.Abstraction;
+
 namespace AmcomanApi
 {
 	public class Program
@@ -8,6 +12,7 @@ namespace AmcomanApi
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			builder.Services.AddScoped<IAflRepository<AflProduct>, AflMockRepo<AflProduct>>();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
