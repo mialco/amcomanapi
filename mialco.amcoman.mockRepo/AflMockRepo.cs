@@ -8,7 +8,7 @@ namespace mialco.amcoman.mockRepo
 	{
 		public T Get(int id)
 		{
-			T result = default(T);
+			T? result = default(T);
 			var entityType = typeof(T);
 			if (entityType == typeof(AflProduct))
 			{
@@ -18,7 +18,21 @@ namespace mialco.amcoman.mockRepo
 					Id = 1,
 					Description = "Product1 descrition",
 					Price = 1222.3m,
-					RecordStatus = "A"
+					RecordStatus = "A",
+					NavigateUrl = "https://mialco.com",
+					ImgUrl = "http://unclelouieshop.com/images/thumbs/0000013_2-facoffee-show-ceramic-mug_550.jpeg",
+					AdditionalInfoTitle = "Additional Info Title",
+					AdditionalInfoUrl = "Additional Info Url",
+					Advertiser = "Advertizer",
+					AdvertizerLinkID = "advertizerLinkIs",
+					EndDate = DateTime.Now,
+					ImgAlt = "Img Alt Description",
+					ImgDescription="Image description",
+					IsActive = true,
+					LinkCode="Link code",
+					StartDate=DateTime.Now
+					
+					
 				} as T;
 
 

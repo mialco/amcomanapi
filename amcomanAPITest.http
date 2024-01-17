@@ -1,1 +1,5 @@
 GET http://localhost:5000/weatherforecast
+
+###
+GET https://localhost:7150/api/Products/1
+
