@@ -20,9 +20,9 @@ namespace AmcomanApi.Controllers
 		}
 		// GET: api/<ProductsController>
 		[HttpGet]
-		public IEnumerable<AflProduct> Get()
+		public  IEnumerable<AflProduct> Get(int pageIndex, int pageSize)
 		{
-			return _productRepository.GetAll();
+			return _productRepository.GetAll(pageIndex,pageSize);
 		}
 
 		// GET api/<ProductsController>/5

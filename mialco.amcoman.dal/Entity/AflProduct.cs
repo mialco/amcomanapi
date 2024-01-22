@@ -19,6 +19,7 @@ namespace mialco.amcoman.dal.Entity
 		//	DatabaseGenerated(DatabaseGeneratedOption.Identity)
 		//	]
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public long Id { get; set; }
 		public string ProductName { get; set; } = string.Empty;
 		public string ? Description { get; set; }= string.Empty;
@@ -31,7 +32,8 @@ namespace mialco.amcoman.dal.Entity
 		public string? RecordStatus { get; set; }
 		public string? LinkCode { get; set; }
 		public string ?Advertiser { get; set; }
-		public decimal Price { get; set; }
+		
+		public double Price { get; set; }
 		public string ?AdvertizerLinkID { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }

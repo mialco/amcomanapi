@@ -23,5 +23,11 @@ namespace mialco.amcoman.repository
 		{
 			return _dbSet.ToList();
 		}
+
+		public IEnumerable<T> GetAll(int page, int pageSize)
+		{
+			return _dbSet.ToList();
+		}
+
 	}
 }

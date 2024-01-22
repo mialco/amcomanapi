@@ -9,7 +9,7 @@ namespace mialco.amcoman.repository.Abstraction
 {
 	public interface IAflRepository<T> where T : class
 	{
-		IEnumerable<T> GetAll();
+		IEnumerable<T> GetAll(int page, int pageSize);
 		T Get(int id);
 		//AflProductsPage GetAflProductsPage(int page, int pageSize, AflProductFilter filter);
 		//AflProductsPage SearchAflProducts(int page, int pageSize, string searchTerms);

@@ -1,7 +1,15 @@
 
+using mialco.amcoman.dal;
 using mialco.amcoman.dal.Entity;
 using mialco.amcoman.mockRepo;
+using mialco.amcoman.repository;
 using mialco.amcoman.repository.Abstraction;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AmcomanApi
 {
@@ -9,10 +17,26 @@ namespace AmcomanApi
 	{
 		public static void Main(string[] args)
 		{
+
+			string SqlConnectionStringName = "MSSqlConnectionString";
+
 			var builder = WebApplication.CreateBuilder(args);
 
+			IConfiguration configuration = builder.Configuration;
+			var connectionString = configuration.GetConnectionString(SqlConnectionStringName);
+
+			 builder.Services.AddDbContext<AmcomanContext>(options =>
+			{
+				options.UseSqlServer(connectionString);
+				//options.UseSqlServer(b => b.MigrationsAssembly("AmcomanApi"));				
+			});
+
 			// Add services to the container.
-			builder.Services.AddScoped<IAflRepository<AflProduct>, AflMockRepo<AflProduct>>();
+			//builder.Services.AddScoped<IAflRepository<AflProduct>, AflMockRepo<AflProduct>>();
+			//builder.Services.AddScoped(DbContext, AmcomanContext);
+			//builder.Services.AddScoped<IAflRepository<AflProduct>, AflEFRepository<AflProduct>>();
+			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+			//builder.Services.AddScoped<
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -49,6 +73,7 @@ namespace AmcomanApi
 
 			app.MapControllers();
 
+			DbDataInitializer.Seed(app);
 			app.Run();
 		}
 	}
