@@ -10,7 +10,7 @@ namespace mialco.amcoman.repository.Abstraction
 	public interface IAflRepository<T> where T : class
 	{
 		IEnumerable<T> GetAll(int page, int pageSize);
-		T Get(int id);
+		T Get(long id);
 		//AflProductsPage GetAflProductsPage(int page, int pageSize, AflProductFilter filter);
 		//AflProductsPage SearchAflProducts(int page, int pageSize, string searchTerms);
 		//Task<AflProductsPage> SearchAflProductsAsync(int page, int pageSize, string searchTerms);

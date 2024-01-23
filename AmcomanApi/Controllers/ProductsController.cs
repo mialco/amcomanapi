@@ -1,7 +1,10 @@
-﻿using mialco.amcoman.dal.Abstraction;
+﻿using mialco.amcoman.dal;
+using mialco.amcoman.dal.Abstraction;
 using mialco.amcoman.dal.Entity;
+using mialco.amcoman.repository;
 using mialco.amcoman.repository.Abstraction;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,7 +14,8 @@ namespace AmcomanApi.Controllers
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
-		private IAflRepository<AflProduct> _productRepository;
+		private IAflRepository<AflProduct> _productRepository; //= new AflEFRepository<AflProduct>(AmcomanContext);
+		//private DbContext _context;
 
 		public ProductsController(IAflRepository<AflProduct> productRepository) 
 		{ 

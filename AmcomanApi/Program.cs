@@ -25,18 +25,18 @@ namespace AmcomanApi
 			IConfiguration configuration = builder.Configuration;
 			var connectionString = configuration.GetConnectionString(SqlConnectionStringName);
 
-			 builder.Services.AddDbContext<AmcomanContext>(options =>
-			{
-				options.UseSqlServer(connectionString);
-				//options.UseSqlServer(b => b.MigrationsAssembly("AmcomanApi"));				
-			});
 
 			// Add services to the container.
 			//builder.Services.AddScoped<IAflRepository<AflProduct>, AflMockRepo<AflProduct>>();
 			//builder.Services.AddScoped(DbContext, AmcomanContext);
+			//builder.Services.AddTransient(typeof(IAflRepository<AflProduct>), typeof(AflEFRepository<AflProduct>));
 			//builder.Services.AddScoped<IAflRepository<AflProduct>, AflEFRepository<AflProduct>>();
-			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+	
+			//builder.Services.AddScoped(IDbCon DbContext,app.dbContext)
 			//builder.Services.AddScoped<
+
+
+
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -50,6 +50,15 @@ namespace AmcomanApi
 					.AllowAnyMethod();
 				});
 			});
+
+			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+			builder.Services.AddDbContext<AmcomanContext>(options =>
+			{
+				options.UseSqlServer(connectionString);
+				options.UseSqlServer(b => b.MigrationsAssembly("AmcomanApi"));
+			});
+
+
 			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.

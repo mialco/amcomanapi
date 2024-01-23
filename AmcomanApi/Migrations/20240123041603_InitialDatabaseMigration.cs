@@ -32,7 +32,7 @@ namespace AmcomanApi.Migrations
                     RecordStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LinkCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Advertiser = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     AdvertizerLinkID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),

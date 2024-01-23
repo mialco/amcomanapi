@@ -12,7 +12,7 @@ using mialco.amcoman.dal;
 namespace AmcomanApi.Migrations
 {
     [DbContext(typeof(AmcomanContext))]
-    [Migration("20240121230126_InitialDatabaseMigration")]
+    [Migration("20240123041603_InitialDatabaseMigration")]
     partial class InitialDatabaseMigration
     {
         /// <inheritdoc />
@@ -71,7 +71,8 @@ namespace AmcomanApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()

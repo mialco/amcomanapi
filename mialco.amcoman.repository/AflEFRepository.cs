@@ -1,4 +1,5 @@
-﻿using mialco.amcoman.dal.Abstraction;
+﻿using mialco.amcoman.dal;
+using mialco.amcoman.dal.Abstraction;
 using mialco.amcoman.repository.Abstraction;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,15 +7,15 @@ namespace mialco.amcoman.repository
 {
 	public class AflEFRepository<T> : IAflRepository<T> where T : class
 	{
-		private DbContext _context;
+		private AmcomanContext _context;
 		private DbSet<T> _dbSet;
 
-		public AflEFRepository(DbContext context)
+		public AflEFRepository(AmcomanContext context)
 		{
 			_context = context;
 			_dbSet = _context.Set<T>();
 		}
-		public T Get(int id)
+		public T Get(long id)
 		{
 			return _dbSet.Find(id);
 		}

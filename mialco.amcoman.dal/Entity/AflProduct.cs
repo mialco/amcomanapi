@@ -1,4 +1,5 @@
 ﻿using mialco.amcoman.dal.Abstraction;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,9 +32,9 @@ namespace mialco.amcoman.dal.Entity
 		public string ?  AdditionalInfoUrl { get; set; }
 		public string? RecordStatus { get; set; }
 		public string? LinkCode { get; set; }
-		public string ?Advertiser { get; set; }
-		
-		public double Price { get; set; }
+		public string ?Advertiser { get; set; }		
+		[Precision(18,4)]
+		public decimal Price { get; set; }
 		public string ?AdvertizerLinkID { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }

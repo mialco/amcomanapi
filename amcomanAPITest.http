@@ -3,3 +3,8 @@ GET http://localhost:5000/weatherforecast
 ###
 GET https://localhost:7150/api/Products/1
 
+### 
+GET https://localhost:7150/api/Products?pageindex=1&pagesize=2
+
+####
+### Client site testing
