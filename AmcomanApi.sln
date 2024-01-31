@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		amcomanAPITest.http = amcomanAPITest.http
 		ProjectNotes.md = ProjectNotes.md
+		SerchTermApproachProposedByChatGPT.md = SerchTermApproachProposedByChatGPT.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mialco.amcoman.dal", "mialco.amcoman.dal\mialco.amcoman.dal.csproj", "{A88B373A-3B3A-432C-98DB-F7F3AD3C135B}"

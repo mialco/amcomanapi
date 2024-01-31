@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mialco.amcoman.dal;
 
@@ -11,9 +12,11 @@ using mialco.amcoman.dal;
 namespace AmcomanApi.Migrations
 {
     [DbContext(typeof(AmcomanContext))]
-    partial class AmcomanContextModelSnapshot : ModelSnapshot
+    [Migration("20240131081738_CategoryGroup_DateTimeFields")]
+    partial class CategoryGroup_DateTimeFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,65 +207,6 @@ namespace AmcomanApi.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("mialco.amcoman.dal.Entity.CategoryGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GroupDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CategoryGroups");
-                });
-
-            modelBuilder.Entity("mialco.amcoman.dal.Entity.Category_CategoryGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryGroupId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Categories_CategoryGroups");
-                });
-
             modelBuilder.Entity("mialco.amcoman.dal.Entity.AflProduct_Categorie", b =>
                 {
                     b.HasOne("mialco.amcoman.dal.Entity.AflProduct", "AflProduct")
@@ -282,33 +226,9 @@ namespace AmcomanApi.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("mialco.amcoman.dal.Entity.Category_CategoryGroup", b =>
-                {
-                    b.HasOne("mialco.amcoman.dal.Entity.CategoryGroup", "CategoryGroup")
-                        .WithMany("Categories_CategoryGroups")
-                        .HasForeignKey("CategoryGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("mialco.amcoman.dal.Entity.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("CategoryGroup");
-                });
-
             modelBuilder.Entity("mialco.amcoman.dal.Entity.Category", b =>
                 {
                     b.Navigation("AflProducts_Categories");
-                });
-
-            modelBuilder.Entity("mialco.amcoman.dal.Entity.CategoryGroup", b =>
-                {
-                    b.Navigation("Categories_CategoryGroups");
                 });
 #pragma warning restore 612, 618
         }

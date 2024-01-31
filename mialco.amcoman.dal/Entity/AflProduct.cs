@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace mialco.amcoman.dal.Entity
 {
-	[Table("AflProducts", Schema="Afl")]	
+	[Table("AflProducts")]	
 	public class AflProduct : IAflEntity
 	{
 		//public AflProduct() { }

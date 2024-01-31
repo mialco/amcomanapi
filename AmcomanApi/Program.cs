@@ -84,6 +84,7 @@ namespace AmcomanApi
 
 			DbDataInitializer.Seed(app);
 			app.Run();
+
 		}
 	}
 }
