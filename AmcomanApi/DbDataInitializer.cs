@@ -24,7 +24,32 @@ namespace AmcomanApi
 
 					context.SaveChanges();
 				}
-				
+							
+				if (! context.Categories.Any())
+				{
+					var mockRepo = new AflMockRepo<Category>();
+					var categories = mockRepo.GetAllForSeed(1, 1);
+					context.AddRange(categories);
+
+					context.SaveChanges();
+				}
+
+				if (! context.CategoryGroups.Any())
+				{
+					var mockRepo = new AflMockRepo<CategoryGroup>();
+					var categoryGroups = mockRepo.GetAll(1, 1);
+					context.AddRange(categoryGroups);
+
+					context.SaveChanges();
+				}
+				if (! context.Categories_CategoryGroups.Any())
+				{
+					var mockRepo = new AflMockRepo<Category_CategoryGroup>();
+					var categories_CategoryGroups = mockRepo.GetAll(1, 1);
+					context.AddRange(categories_CategoryGroups);
+
+					context.SaveChanges();
+				}
 			}
 		
 		}

@@ -1,6 +1,7 @@
 ﻿using mialco.amcoman.dal.Entity;
 using mialco.amcoman.repository.Abstraction;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace mialco.amcoman.mockRepo
 {
@@ -34,7 +35,29 @@ namespace mialco.amcoman.mockRepo
 
 
 				} as T;
-
+				if (entityType== typeof(Category))
+				{
+					result = new Category
+					{
+						CategoryName = "Category1",
+						Id = 1,
+						CategoryDescription = "Category1 descrition",
+						CategoryPrice = 1222.3m,
+						CategoryRecordStatus = "A",
+						CategoryAdditionalInfoTitle = "Additional Info Title",
+						CategoryAdditionalInfoUrl = "Additional Info Url",
+						CategoryImgAlt = "Image alt",
+						CategoryImgDescription = "Image Description",
+						IsActive = true,
+						CategoryImgUrl = "http://mialco.com/images/thumbs/0000091_e-commerce-installation-on-aws-basic-installation_415.jpeg",
+						CategoryUrl = "https://mialco.com/e-commerce-installation-on-aws-basic-installation",
+						CategoryStartDate = DateTime.Now,
+						CategoryEndDate = DateTime.Now.AddDays(1000),
+						CategoryAdvertiser = "Advertizer name:",
+						CategoryAdvertiserLinkID = "https://mialco.com/e-commerce-installation-on-aws-basic-installation",
+						CategoryLinkCode = "sae3d5412"
+					} as T;
+				}
 
 			}
 			return result;
@@ -248,9 +271,143 @@ namespace mialco.amcoman.mockRepo
 			} as List<T>;
 			}
 
+			if (typeof(T) == typeof(Category))
+			{
+				result = CategoryGenerator.GenerateNestedCategories() as List<T>;
+			}
+			if (typeof(T) == typeof(CategoryGroup))
+			{
+				result = new List<CategoryGroup> {
+					new CategoryGroup {
+						GroupName="CategoryGroup1",
+						// Id=1, Commnent all ids because they are auto generated
+						GroupDescription ="CategoryGroup1 descrition",
+						CreatedAt= DateTime.Now,
+						LastUpdated = DateTime.Now
+					},
+					new CategoryGroup {
+						GroupName="CategoryGroup2",
+						//Id=2,
+						GroupDescription ="CategoryGroup2 descrition",
+						CreatedAt= DateTime.Now,
+						LastUpdated = DateTime.Now
+					},
+					new CategoryGroup {
+						GroupName="CategoryGroup3",
+						//Id=3,
+						GroupDescription ="CategoryGroup3 descrition",
+						CreatedAt= DateTime.Now,
+						LastUpdated = DateTime.Now
+					},
+					new CategoryGroup {
+						GroupName="CategoryGroup4",
+						//Id=4,
+						GroupDescription ="CategoryGroup4 descrition",
+						CreatedAt= DateTime.Now,
+						LastUpdated = DateTime.Now
+					}
+				} as List<T>;
+
+			}
+
+			if (typeof(T) == typeof(Category_CategoryGroup))
+			{
+				result = new List<Category_CategoryGroup> {
+						new Category_CategoryGroup {
+							CategoryId=1,
+							CategoryGroupId=1,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=2,
+							CategoryGroupId=2,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=3,
+							CategoryGroupId=3,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=4,
+							CategoryGroupId=4,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+
+						new Category_CategoryGroup {
+							CategoryId=5,
+							CategoryGroupId=1,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=6,
+							CategoryGroupId=2,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=7,
+							CategoryGroupId=3,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=8,
+							CategoryGroupId=4,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=9,
+							CategoryGroupId=1,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=10,
+							CategoryGroupId=2,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=11,
+							CategoryGroupId=3,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						},
+						new Category_CategoryGroup {
+							CategoryId=12,
+							CategoryGroupId=4,
+							IsActive=true,
+							CreatedAt= DateTime.Now,
+							LastUpdated = DateTime.Now
+						}
+
+					} as List<T>;
+			}
+
 
 			return result;
 		}
+
+
+
 
 		public IEnumerable<T> GetAllForSeed(int page, int pageSize)
 		{
@@ -459,9 +616,86 @@ namespace mialco.amcoman.mockRepo
 
 			} as List<T>;
 			}
+			if (typeof(T) == typeof(Category))
+			{
+				result = CategoryGenerator.GenerateNestedCategories() as List<T>;
+			}
 
 
 			return result;
+		}
+
+		public class CategoryGenerator
+		{
+			public static List<Category> GenerateNestedCategories()
+			{
+				var categories = new List<Category>();
+
+				for (int i = 1; i <= 20; i++)
+				{
+					var category = new Category
+					{
+						CategoryName = $"Category{i}",
+						//Id = i, We should not set the id here because it is auto generated
+						CategoryDescription = $"Category{i} description",
+						CategoryPrice = 1222.3m,
+						CategoryRecordStatus = "A",
+						CategoryAdditionalInfoTitle = "Additional Info Title",
+						CategoryAdditionalInfoUrl = "Additional Info Url",
+						CategoryImgAlt = "Image alt",
+						CategoryImgDescription = "Image Description",
+						IsActive = true,
+						CategoryImgUrl = "http://mialco.com/images/thumbs/0000091_e-commerce-installation-on-aws-basic-installation_415.jpeg",
+						CategoryUrl = "https://mialco.com/e-commerce-installation-on-aws-basic-installation",
+						CategoryStartDate = DateTime.Now,
+						CategoryEndDate = DateTime.Now.AddDays(1000),
+						CategoryAdvertiser = "Advertiser name:",
+						CategoryAdvertiserLinkID = "https://mialco.com/e-commerce-installation-on-aws-basic-installation",
+						CategoryLinkCode = "sae3d5412"
+					};
+
+					GenerateNestedCategoriesRecursive(category, 1, 4);
+
+					categories.Add(category);
+				}
+
+				return categories;
+			}
+
+			private static void GenerateNestedCategoriesRecursive(Category parentCategory, int currentLevel, int maxLevel)
+			{
+				if (currentLevel >= maxLevel)
+					return;
+
+				for (int i = 1; i <= 20; i++)
+				{
+					var category = new Category
+					{
+						CategoryName = $"Category{i}",
+						Id = i,
+						ParentCategoryId = parentCategory.Id,
+						CategoryDescription = $"Category{i} description",
+						CategoryPrice = 1222.3m,
+						CategoryRecordStatus = "A",
+						CategoryAdditionalInfoTitle = "Additional Info Title",
+						CategoryAdditionalInfoUrl = "Additional Info Url",
+						CategoryImgAlt = "Image alt",
+						CategoryImgDescription = "Image Description",
+						IsActive = true,
+						CategoryImgUrl = "http://mialco.com/images/thumbs/0000091_e-commerce-installation-on-aws-basic-installation_415.jpeg",
+						CategoryUrl = "https://mialco.com/e-commerce-installation-on-aws-basic-installation",
+						CategoryStartDate = DateTime.Now,
+						CategoryEndDate = DateTime.Now.AddDays(1000),
+						CategoryAdvertiser = "Advertiser name:",
+						CategoryAdvertiserLinkID = "https://mialco.com/e-commerce-installation-on-aws-basic-installation",
+						CategoryLinkCode = "sae3d5412"
+					};
+
+					//parentCategory. SubCategories.Add(category); //Explain this line?/
+
+					GenerateNestedCategoriesRecursive(category, currentLevel + 1, maxLevel);
+				}
+			}
 		}
 
 
