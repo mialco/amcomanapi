@@ -406,8 +406,10 @@ namespace mialco.amcoman.mockRepo
 			return result;
 		}
 
-
-
+		public IEnumerable<T> GetAll()
+		{
+			throw new NotImplementedException();
+		}
 
 		public IEnumerable<T> GetAllForSeed(int page, int pageSize)
 		{
