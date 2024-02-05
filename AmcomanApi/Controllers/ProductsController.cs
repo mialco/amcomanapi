@@ -2,7 +2,7 @@
 using mialco.amcoman.dal.Abstraction;
 using mialco.amcoman.dal.Entity;
 using mialco.amcoman.repository;
-using mialco.amcoman.repository.Abstraction;
+using mialco.amcoman.repository.abstraction;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

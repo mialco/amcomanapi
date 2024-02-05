@@ -1,5 +1,5 @@
 ﻿using mialco.amcoman.dal.Entity;
-using mialco.amcoman.repository.Abstraction;
+using mialco.amcoman.repository.abstraction;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
@@ -7,7 +7,7 @@ namespace mialco.amcoman.mockRepo
 {
 	public class AflMockRepo<T> : IAflRepository<T> where T : class
 	{
-		public T Get(long id)
+		public T Get(int id)
 		{
 			T? result = default(T);
 			var entityType = typeof(T);

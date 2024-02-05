@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\mialco.amcoman.dal\mialco.amcoman.dal.csproj" />
+    <ProjectReference Include="..\mialco.amcoman.shared\mialco.amcoman.shared.csproj" />
   </ItemGroup>
 
 </Project>

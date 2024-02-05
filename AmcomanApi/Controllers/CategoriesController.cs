@@ -1,5 +1,7 @@
 ﻿using mialco.amcoman.dal.Entity;
-using mialco.amcoman.repository.Abstraction;
+using mialco.amcoman.repository;
+using mialco.amcoman.repository.abstraction;
+using mialco.amcoman.shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,19 +12,19 @@ namespace AmcomanApi.Controllers
 	[ApiController]
 	public class CategoriesController : ControllerBase
 	{
-		private readonly IAflRepository<Category> _repo;
+		private readonly ICategoriesAndGroupsRepository _repoCategoryAndGroup;
 		private readonly IAflRepository<CategoryGroup> _repoGroup;
 
-		public CategoriesController(IAflRepository<Category> repo, IAflRepository<CategoryGroup> repoGroup)
+		public CategoriesController(ICategoriesAndGroupsRepository  repo, IAflRepository<CategoryGroup> repoGroup)
 		{
-			_repo = repo;
+			_repoCategoryAndGroup = repo;
 			this._repoGroup = repoGroup;
 		}
 		// GET: api/<CategoriesController>
 		[HttpGet]
 		public ActionResult<IEnumerable<Category>> Get()
 		{
-			var result = _repo.GetAll().ToList();
+			var result = _repoCategoryAndGroup.GetAll().ToList();
 			return Ok(result);
 		}
 
@@ -31,7 +33,7 @@ namespace AmcomanApi.Controllers
 		[Route("bygroup/:id")]
 		public ActionResult<IEnumerable<Category>> GetByGroup(int id)
 		{
-			var result = _repo.GetAll().Where(x=>x.IsActive).ToList();
+			var result = _repoCategoryAndGroup.GetAll().Where(x=>x.IsActive).ToList();
 			return Ok(result);
 		}
 
@@ -55,6 +57,26 @@ namespace AmcomanApi.Controllers
 			return Ok(result);
 		}
 
+		// GET: api/<CategoriesController>
+		[HttpGet("tree")]
+		public ActionResult<IEnumerable<CategoryTreeDto>> GetCategoryTree(List <int> ? groupIdsfilter)
+		{
+			var result = new List<CategoryTreeDto>();
+			List<Category> categories; 
+			if(groupIdsfilter != null)
+			{
+				//categories = _repo.GetAll().Select(x=>
+				//new { Id = x.Id, Name = x.CategoryName,Description=x.CategoryDescription ,IsActive = x.IsActive }.
+				//}) 
+				//	Where(x=>groupIdsfilter.Contains(x.CategoryGroupId)).ToList();
+			}
+			else
+			{
+				categories = _repoCategoryAndGroup.GetAll().ToList();
+			}	
+
+			return Ok(result);
+		}
 
 		// GET api/<CategoriesController>/5
 		[HttpGet("{id}")]

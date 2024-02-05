@@ -17,6 +17,7 @@ namespace mialco.amcoman.dal.Entity
 		public int Id { get; set; }
 		public string GroupName { get; set; } = string.Empty;
 		public string GroupDescription { get; set; } = string.Empty;
+		public bool IsActive { get; set; }	
 		public DateTime CreatedAt { get; set; } 
 		public DateTime LastUpdated { get; set; }
 	

@@ -3,7 +3,7 @@ using mialco.amcoman.dal;
 using mialco.amcoman.dal.Entity;
 using mialco.amcoman.mockRepo;
 using mialco.amcoman.repository;
-using mialco.amcoman.repository.Abstraction;
+using mialco.amcoman.repository.abstraction;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -52,12 +52,15 @@ namespace AmcomanApi
 				});
 			});
 
-			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+			//builder.Services.AddScoped(typeof(IAflRepository<Category>),typeof(CategoryAndGroupRepository));	
 			builder.Services.AddDbContext<AmcomanContext>(options =>
 			{
 				options.UseSqlServer(connectionString);
 				options.UseSqlServer(b => b.MigrationsAssembly("AmcomanApi"));
 			});
+			builder.Services.AddScoped(typeof(ICategoriesAndGroupsRepository), typeof(CategoriesAndGroupsRepository));
+			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+
 
 
 			var app = builder.Build();
@@ -81,6 +84,7 @@ namespace AmcomanApi
 					await context.Response.WriteAsync("<a href=\"/\">Home</a><br>\r\n");
 					await context.Response.WriteAsync("</body></html>\r\n");
 					await context.Response.WriteAsync(new string(' ', 512)); // Padding for IE
+					await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.ToString());
 				});
 			});	
 

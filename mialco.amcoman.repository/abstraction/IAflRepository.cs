@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace mialco.amcoman.repository.Abstraction
+namespace mialco.amcoman.repository.abstraction
 {
 	public interface IAflRepository<T> where T : class
 	{
 		IEnumerable<T> GetAll(int page, int pageSize);
 		IEnumerable<T> GetAll();
-		T Get(long id);
+		T Get(int id);
 		//AflProductsPage GetAflProductsPage(int page, int pageSize, AflProductFilter filter);
 		//AflProductsPage SearchAflProducts(int page, int pageSize, string searchTerms);
 		//Task<AflProductsPage> SearchAflProductsAsync(int page, int pageSize, string searchTerms);

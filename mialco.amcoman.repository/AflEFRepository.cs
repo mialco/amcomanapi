@@ -1,6 +1,6 @@
 ﻿using mialco.amcoman.dal;
 using mialco.amcoman.dal.Abstraction;
-using mialco.amcoman.repository.Abstraction;
+using mialco.amcoman.repository.abstraction;
 using Microsoft.EntityFrameworkCore;
 
 namespace mialco.amcoman.repository
@@ -15,7 +15,7 @@ namespace mialco.amcoman.repository
 			_context = context;
 			_dbSet = _context.Set<T>();
 		}
-		public T Get(long id)
+		public T Get(int id)
 		{
 			return _dbSet.Find(id);
 		}

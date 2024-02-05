@@ -34,6 +34,6 @@ namespace mialco.amcoman.dal.Entity
 		public DateTime CreatedAt { get; set; }
 		public DateTime LastUpdated { get; set; }
 		public virtual IEnumerable<AflProduct_Categorie> AflProducts_Categories { get; set; }
-
+		public virtual IEnumerable<Category_CategoryGroup> Category_CategoryGroups { get; set; }
 	}
 }
