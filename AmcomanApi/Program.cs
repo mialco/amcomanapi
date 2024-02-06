@@ -74,6 +74,7 @@ namespace AmcomanApi
 					await context.Response.WriteAsync("<html lang=\"en\"><body>\r\n");
 					await context.Response.WriteAsync("ERROR!<br><br>\r\n");
 					var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
 					// Use exceptionHandlerPathFeature to process the exception (for example, 
 					// logging), but do NOT expose sensitive error information directly to 
 					// the client.

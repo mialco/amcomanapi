@@ -50,6 +50,7 @@ namespace mialco.amcoman.repository
 				.Select(c => new CategoryAndGroupDto
 				{
 					CateogoryId = c.Id,
+					ParentId = c.ParentCategoryId,
 					Name = c.CategoryName,
 					Description = c.CategoryDescription,
 					CategoryGroupId = c.Category_CategoryGroups.First().CategoryGroupId,

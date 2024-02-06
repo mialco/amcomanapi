@@ -63,12 +63,17 @@ namespace AmcomanApi.Controllers
 		{
 			var result = new List<CategoryTreeDto>();
 			List<Category> categories; 
-			if(groupIdsfilter != null)
+			if(groupIdsfilter != null && groupIdsfilter.Count!=0)
 			{
-				//categories = _repo.GetAll().Select(x=>
-				//new { Id = x.Id, Name = x.CategoryName,Description=x.CategoryDescription ,IsActive = x.IsActive }.
-				//}) 
-				//	Where(x=>groupIdsfilter.Contains(x.CategoryGroupId)).ToList();
+				var cat =_repoCategoryAndGroup.GetCategoriesWithGroupsBasic(groupIdsfilter)
+					.Select(x=> new CategoryAndGroupDto {
+						CategoryGroupId=x.CategoryGroupId,
+						CateogoryId = x.CateogoryId,
+						Name = x.Name,
+						Description = x.Description,
+						GroupName = x.GroupName, 
+					}).ToList();
+				
 			}
 			else
 			{
@@ -77,6 +82,14 @@ namespace AmcomanApi.Controllers
 
 			return Ok(result);
 		}
+		//I want to build a tree of categories and groups based on categotyandgroupdto into CategoryTreeDto
+
+
+
+
+
+
+
 
 		// GET api/<CategoriesController>/5
 		[HttpGet("{id}")]
@@ -101,6 +114,39 @@ namespace AmcomanApi.Controllers
 		[HttpDelete("{id}")]
 		public void Delete(int id)
 		{
+		}
+
+		private Dictionary<int, CategoryTreeDto> _tempTree = new Dictionary<int, CategoryTreeDto>();
+		public List<CategoryTreeDto> BuildCategoryTree(List<CategoryAndGroupDto> categoryAndGroupList,int indexStart,  List<CategoryTreeDto> categoryTree)
+		{
+			// initialize the tree and sort the list if it is the first level
+			if (indexStart == 0)
+			{
+				categoryTree = new List<CategoryTreeDto>();
+				categoryAndGroupList.Sort((x, y) => $"{x.ParentId:D4}-{x.Name}".CompareTo($"{y.ParentId:D4}-{y.Name}"));
+			}
+
+			for (var i = 0; i< categoryAndGroupList.Count; i++)
+			{
+				var category = categoryAndGroupList[i];
+				// Check if the category group already exists in the category tree
+				var existingCategory = categoryTree.FirstOrDefault(c => c.ParentId== category.ParentId);
+
+				if (categoryTree.Count==0 || existingCategory != null)
+				{
+					// Add the category to the current Level of the category tree
+					var newNode = new CategoryTreeDto
+					{
+						Id = category.CateogoryId,
+						Name = category.Name,
+						Description = category.Description,
+						ParentId = category.ParentId,
+						Children = new List<CategoryTreeDto>()
+					};
+					categoryTree.Add(newNode);
+				}
+			}
+			return categoryTree;
 		}
 	}
 }

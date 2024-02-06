@@ -9,6 +9,7 @@ namespace mialco.amcoman.shared.Dto
 	public class CategoryAndGroupDto
 	{
 		public int CateogoryId { get; set; }
+		public int ParentId { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public int CategoryGroupId { get; set; }
