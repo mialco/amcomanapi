@@ -4,6 +4,8 @@ using mialco.amcoman.dal.Entity;
 using mialco.amcoman.mockRepo;
 using mialco.amcoman.repository;
 using mialco.amcoman.repository.abstraction;
+using mialco.amcoman.shared;
+using mialco.amcoman.shared.Abstraction;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -60,6 +62,7 @@ namespace AmcomanApi
 			});
 			builder.Services.AddScoped(typeof(ICategoriesAndGroupsRepository), typeof(CategoriesAndGroupsRepository));
 			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+			builder.Services.AddSingleton<IAmcomanApiUtils, AmcomanApiUtils>();
 
 
 

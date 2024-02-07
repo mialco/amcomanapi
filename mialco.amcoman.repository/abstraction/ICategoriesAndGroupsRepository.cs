@@ -11,5 +11,7 @@ namespace mialco.amcoman.repository.abstraction
 	public interface ICategoriesAndGroupsRepository: IAflRepository<Category>
 	{
 		public IEnumerable<CategoryAndGroupDto> GetCategoriesWithGroupsBasic(IEnumerable<int> groupFilterIds);
+		public IEnumerable<CategoryAndGroupDto> GetCategoriesWithGroupsBasic(bool isActive);
+
 	}
 }

@@ -46,18 +46,41 @@ namespace mialco.amcoman.repository
 				.Include(c => c.Category_CategoryGroups)
 				.ThenInclude(cg => cg.CategoryGroup)
 				.Where(c => c.Category_CategoryGroups.Any(cg => groupFilterIds.Contains(cg.CategoryGroupId) 
-				&& cg.IsActive))
+				&& cg.IsActive && c.IsActive))
 				.Select(c => new CategoryAndGroupDto
 				{
-					CateogoryId = c.Id,
+					CategoryId = c.Id,
 					ParentId = c.ParentCategoryId,
 					Name = c.CategoryName,
 					Description = c.CategoryDescription,
 					CategoryGroupId = c.Category_CategoryGroups.First().CategoryGroupId,
 					GroupName = c.Category_CategoryGroups.First().CategoryGroup.GroupName
 				}).ToList();
+		
+			
 			return categoriesAndGroups;
 		}
+
+		public IEnumerable<CategoryAndGroupDto> GetCategoriesWithGroupsBasic(bool isActive)
+		{
+			var categoriesAndGroups = _amcomanContext.Categories
+				.Include(c => c.Category_CategoryGroups)
+				.ThenInclude(cg => cg.CategoryGroup)
+				.Where(c => c.Category_CategoryGroups.Any(cg => c.IsActive == isActive && cg.IsActive == isActive))
+				.Select(c => new CategoryAndGroupDto
+				{
+					CategoryId = c.Id,
+					ParentId = c.ParentCategoryId,
+					Name = c.CategoryName,
+					Description = c.CategoryDescription,
+					CategoryGroupId = c.Category_CategoryGroups.First().CategoryGroupId,
+					GroupName = c.Category_CategoryGroups.First().CategoryGroup.GroupName
+				}).ToList();
+
+
+			return categoriesAndGroups;
+		}
+
 
 		//IEnumerable<CategoryAndGroupDto> ICategoriesAndGroupsRepository.GetCategoriesWithGroupsBasic(System.Collections.Generic.IEnumerable<int> groupFilterIds)
 		//{

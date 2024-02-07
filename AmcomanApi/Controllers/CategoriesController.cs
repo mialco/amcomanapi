@@ -1,8 +1,10 @@
 ﻿using mialco.amcoman.dal.Entity;
 using mialco.amcoman.repository;
 using mialco.amcoman.repository.abstraction;
+using mialco.amcoman.shared.Abstraction;
 using mialco.amcoman.shared.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,11 +16,14 @@ namespace AmcomanApi.Controllers
 	{
 		private readonly ICategoriesAndGroupsRepository _repoCategoryAndGroup;
 		private readonly IAflRepository<CategoryGroup> _repoGroup;
+		private readonly IAmcomanApiUtils _apiUtils;
 
-		public CategoriesController(ICategoriesAndGroupsRepository  repo, IAflRepository<CategoryGroup> repoGroup)
+		public CategoriesController(ICategoriesAndGroupsRepository  repo, IAflRepository<CategoryGroup> repoGroup,
+			IAmcomanApiUtils apiUtils)
 		{
 			_repoCategoryAndGroup = repo;
 			this._repoGroup = repoGroup;
+			this._apiUtils = apiUtils;
 		}
 		// GET: api/<CategoriesController>
 		[HttpGet]
@@ -61,25 +66,35 @@ namespace AmcomanApi.Controllers
 		[HttpGet("tree")]
 		public ActionResult<IEnumerable<CategoryTreeDto>> GetCategoryTree(List <int> ? groupIdsfilter)
 		{
-			var result = new List<CategoryTreeDto>();
+			IEnumerable<CategoryTreeDto> result; ;
 			List<Category> categories; 
+			IEnumerable<CategoryAndGroupDto> cat;
 			if(groupIdsfilter != null && groupIdsfilter.Count!=0)
 			{
-				var cat =_repoCategoryAndGroup.GetCategoriesWithGroupsBasic(groupIdsfilter)
+				cat =_repoCategoryAndGroup.GetCategoriesWithGroupsBasic(groupIdsfilter)
 					.Select(x=> new CategoryAndGroupDto {
 						CategoryGroupId=x.CategoryGroupId,
-						CateogoryId = x.CateogoryId,
+						CategoryId = x.CategoryId,
 						Name = x.Name,
 						Description = x.Description,
 						GroupName = x.GroupName, 
-					}).ToList();
+					});
 				
 			}
 			else
-			{
-				categories = _repoCategoryAndGroup.GetAll().ToList();
-			}	
+							{
+				cat =_repoCategoryAndGroup.GetCategoriesWithGroupsBasic(true)
+					.Select(x=> new CategoryAndGroupDto {
+						CategoryGroupId=x.CategoryGroupId,
+						CategoryId = x.CategoryId,
+						Name = x.Name,
+						Description = x.Description,
+						GroupName = x.GroupName, 
+					});	
 
+			}
+
+			result = _apiUtils.BuildCategoryTree(cat.ToList()); ;
 			return Ok(result);
 		}
 		//I want to build a tree of categories and groups based on categotyandgroupdto into CategoryTreeDto
@@ -116,37 +131,5 @@ namespace AmcomanApi.Controllers
 		{
 		}
 
-		private Dictionary<int, CategoryTreeDto> _tempTree = new Dictionary<int, CategoryTreeDto>();
-		public List<CategoryTreeDto> BuildCategoryTree(List<CategoryAndGroupDto> categoryAndGroupList,int indexStart,  List<CategoryTreeDto> categoryTree)
-		{
-			// initialize the tree and sort the list if it is the first level
-			if (indexStart == 0)
-			{
-				categoryTree = new List<CategoryTreeDto>();
-				categoryAndGroupList.Sort((x, y) => $"{x.ParentId:D4}-{x.Name}".CompareTo($"{y.ParentId:D4}-{y.Name}"));
-			}
-
-			for (var i = 0; i< categoryAndGroupList.Count; i++)
-			{
-				var category = categoryAndGroupList[i];
-				// Check if the category group already exists in the category tree
-				var existingCategory = categoryTree.FirstOrDefault(c => c.ParentId== category.ParentId);
-
-				if (categoryTree.Count==0 || existingCategory != null)
-				{
-					// Add the category to the current Level of the category tree
-					var newNode = new CategoryTreeDto
-					{
-						Id = category.CateogoryId,
-						Name = category.Name,
-						Description = category.Description,
-						ParentId = category.ParentId,
-						Children = new List<CategoryTreeDto>()
-					};
-					categoryTree.Add(newNode);
-				}
-			}
-			return categoryTree;
-		}
 	}
 }
