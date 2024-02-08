@@ -6,11 +6,13 @@ namespace mialco.amcoman.integration.testing
 {
 	public class RepositoryTesting: IntegrationTestingBase 		
 	{
-		ICategoriesAndGroupsRepository _categoryAneGroupsRepository;
+		ICategoriesAndGroupsRepository ? _categoryAneGroupsRepository;
+		IGroupsRepository ? _groupsRepository;
 		[SetUp]
 		public void Setup()
 		{
 			_categoryAneGroupsRepository = ServiceProvider.GetService<ICategoriesAndGroupsRepository>();
+			_groupsRepository = ServiceProvider.GetService<IGroupsRepository>();
 		}
 
 		[Test]
@@ -75,7 +77,41 @@ namespace mialco.amcoman.integration.testing
 
 		}
 
+		[Test]
+		public void TestCategoryGroups()
+		{
+			// Arrange
+			//Act
+			var groups = _groupsRepository.GetAll();
+			Assert.IsNotNull(groups);
+			Assert.AreNotEqual(0, groups.Count());
 
+			groups = _groupsRepository.GetAll(1,2);
+			Assert.IsNotNull(groups);
+			Assert.AreEqual(2, groups.Count());
+
+			groups = _groupsRepository.GetActive(true);
+			Assert.IsNotNull(groups);
+			Assert.AreNotEqual(0, groups.Count());
+
+			groups = _groupsRepository.GetActive(false);
+			Assert.IsNotNull(groups);
+			Assert.AreEqual(1, groups.Count());
+
+			groups = _groupsRepository.GetActive(true, 1, 2);
+			Assert.IsNotNull(groups);
+			Assert.AreEqual(2, groups.Count());
+
+			groups = _groupsRepository.GetActive(false, 1, 2);
+			Assert.IsNotNull(groups);
+			Assert.AreEqual(1, groups.Count());
+
+			var group = _groupsRepository.Get(1);
+			Assert.IsNotNull(group);
+			Assert.AreEqual(1, group.Id);
+
+
+		}
 
 	}
 }

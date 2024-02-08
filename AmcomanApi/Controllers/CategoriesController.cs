@@ -57,7 +57,6 @@ namespace AmcomanApi.Controllers
 		[Route("Groups/active")]
 		public ActionResult<IEnumerable<CategoryGroup>> GetGroups(bool active)
 		{
-			//TODO: Implement this and add active field to the CategoryGroup entity
 			var result = _repoGroup.GetAll().ToList();
 			return Ok(result);
 		}

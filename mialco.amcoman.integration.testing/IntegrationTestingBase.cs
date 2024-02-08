@@ -41,6 +41,7 @@ namespace mialco.amcoman.integration.testing
 
 			serviceCollection.AddScoped(typeof(ICategoriesAndGroupsRepository), typeof(CategoriesAndGroupsRepository));
 			serviceCollection.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+			serviceCollection.AddScoped(typeof(IGroupsRepository), typeof(GroupsRepository));
 			ServiceProvider = serviceCollection.BuildServiceProvider();
 
 		}

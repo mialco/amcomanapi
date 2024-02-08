@@ -28,7 +28,19 @@ namespace mialco.amcoman.test
 			Assert.NotNull(categoryTree);
 			Assert.AreEqual(3, categoryTree.Count());
 			Assert.AreEqual(1, categoryTree.First(x => x.Id == 1).Children.Count);	
-			//Assert.Pass();
+			Assert.AreEqual(2, categoryTree.First(x => x.Id == 2).Children.Count);
+			Assert.AreEqual(1, categoryTree.First(x => x.Id == 3).Children.Count);
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 1).Children.First(x => x.Id == 4));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 5));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 5).Children.First(x=>x.Id==8));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 5).Children.First(x=>x.Id==9));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 6));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 6).Children.First(x=>x.Id==10));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 6).Children.First(x=>x.Id==11));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 6).Children.First(x=>x.Id==11).Children.First(x=>x.Id==13));	
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 2).Children.First(x => x.Id == 6).Children.First(x=>x.Id==11).Children.First(x=>x.Id==14));	
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 3).Children.First(x => x.Id == 7));
+			Assert.IsNotNull(categoryTree.First(x => x.Id == 3).Children.First(x => x.Id == 7).Children.First(x=>x.Id==12));
 		}
 
 		private IEnumerable<CategoryAndGroupDto> GenerateCategoryAndGroupDtos()

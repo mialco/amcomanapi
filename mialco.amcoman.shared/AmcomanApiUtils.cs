@@ -26,30 +26,28 @@ namespace mialco.amcoman.shared
 
 			for (var i = 0; i < categoryAndGroupList.Count; i++)
 			{
-				var category = categoryAndGroupList[i];
-				// Check if the category group already exists in the category tree
-				var existingCategory = categoryTree.FirstOrDefault(c => c.ParentId == category.ParentId);
-
-				if (categoryTree.Count == 0 || existingCategory != null)
+				var currentItem = categoryAndGroupList[i];
+				//Add it to the temp tree
+				var newNode = new CategoryTreeDto
 				{
-					// Add the category to the current Level of the category tree
-					var newNode = new CategoryTreeDto
-					{
-						Id = category.CategoryId,
-						Name = category.Name,
-						Description = category.Description,
-						ParentId = category.ParentId,
-						Children = new List<CategoryTreeDto>()
-					};
-					if (tempTree.ContainsKey(newNode.ParentId))
-					{
-						tempTree[newNode.ParentId].Children.Add(newNode);
-					}
-					else
-					{
-						categoryTree.Add(newNode);
-						tempTree.Add(newNode.Id, newNode);
-					}
+					Id = currentItem.CategoryId,
+					Name = currentItem.Name,
+					Description = currentItem.Description,
+					ParentId = currentItem.ParentId,
+					Children = new List<CategoryTreeDto>()
+				};
+				tempTree.Add(newNode.Id, newNode);
+				
+				// Check if the category group already exists in the category tree
+				var inTreeParent = tempTree.ContainsKey(newNode.ParentId) ? tempTree[newNode.ParentId] : null;
+
+				if ( inTreeParent != null)
+				{
+					inTreeParent.Children.Add(newNode);
+				}
+				else
+				{
+					categoryTree.Add(newNode);
 				}
 			}
 			return categoryTree;

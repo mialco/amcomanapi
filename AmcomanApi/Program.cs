@@ -62,6 +62,7 @@ namespace AmcomanApi
 			});
 			builder.Services.AddScoped(typeof(ICategoriesAndGroupsRepository), typeof(CategoriesAndGroupsRepository));
 			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
+			builder.Services.AddScoped(typeof(IGroupsRepository), typeof(GroupsRepository));
 			builder.Services.AddSingleton<IAmcomanApiUtils, AmcomanApiUtils>();
 
 
