@@ -19,7 +19,7 @@ namespace AmcomanApi.Controllers
 		private readonly IGroupsRepository _repoGroup;
 		private readonly IAmcomanApiUtils _apiUtils;
 
-		public CategoriesController(ICategoriesAndGroupsRepository  repo, IGroupsRepository repoGroup,
+		public CategoriesController(ICategoriesAndGroupsRepository repo, IGroupsRepository repoGroup,
 			IAmcomanApiUtils apiUtils)
 		{
 			_repoCategoryAndGroup = repo;
@@ -39,7 +39,7 @@ namespace AmcomanApi.Controllers
 		[Route("bygroup/:id")]
 		public ActionResult<IEnumerable<Category>> GetByGroup(int id)
 		{
-			var result = _repoCategoryAndGroup.GetAll().Where(x=>x.IsActive).ToList();
+			var result = _repoCategoryAndGroup.GetAll().Where(x => x.IsActive).ToList();
 			return Ok(result);
 		}
 
@@ -64,52 +64,51 @@ namespace AmcomanApi.Controllers
 
 		// GET: api/<CategoriesController>
 		[HttpGet("tree")]
-		
+
 		public ActionResult<IEnumerable<CategoryTreeDto>> GetCategoryTree([FromQuery] string? groupIdsfilter)
 		{
 
+			groupIdsfilter ??= string.Empty;
 			IEnumerable<CategoryTreeDto> result; ;
-			List<Category> categories; 
+			List<Category> categories;
 			IEnumerable<CategoryAndGroupDto> cat;
 			var groupsFilterList = new List<int>();
-			if (groupIdsfilter != null)
+			var parts = groupIdsfilter.Split(',');
+			var i = 0;
+			foreach (var part in parts)
 			{
-				var parts = groupIdsfilter.Split(',');
-				var i = 0;
-				foreach (var part in parts)
+				if (int.TryParse(part, out i))
 				{
-					if (int.TryParse(part, out i))
-					{
-						groupsFilterList.Add(i);
-					}
-				}	
+					groupsFilterList.Add(i);
+				}
 			}
 
-			if(groupsFilterList.Count!=0)
+			if (groupsFilterList.Count != 0)
 			{
-				cat =_repoCategoryAndGroup.GetCategoriesWithGroupsBasic(groupsFilterList)
-					.Select(x=> new CategoryAndGroupDto {
-						CategoryGroupId=x.CategoryGroupId,
+				cat = _repoCategoryAndGroup.GetCategoriesWithGroupsBasic(groupsFilterList)
+					.Select(x => new CategoryAndGroupDto
+					{
+						CategoryGroupId = x.CategoryGroupId,
 						CategoryId = x.CategoryId,
 						Name = x.Name,
 						Description = x.Description,
-						GroupName = x.GroupName, 
+						GroupName = x.GroupName,
 						ParentId = x.ParentId
 					});
-				
+
 			}
 			else
-							{
-				cat =_repoCategoryAndGroup.GetCategoriesWithGroupsBasic(true)
-					.Select(x=> new CategoryAndGroupDto {
-						CategoryGroupId=x.CategoryGroupId,
+			{
+				cat = _repoCategoryAndGroup.GetCategoriesWithGroupsBasic(true)
+					.Select(x => new CategoryAndGroupDto
+					{
+						CategoryGroupId = x.CategoryGroupId,
 						CategoryId = x.CategoryId,
 						Name = x.Name,
 						Description = x.Description,
-						GroupName = x.GroupName, 
+						GroupName = x.GroupName,
 						ParentId = x.ParentId
-					});	
-
+					});
 			}
 
 			result = _apiUtils.BuildCategoryTree(cat.ToList()); ;
