@@ -8,3 +8,21 @@ GET https://localhost:7150/api/Products?pageindex=1&pagesize=2
 
 ####
 ### Client site testing
+
+/// Test Identity
+
+POST https://localhost:7150/api/Authentication/register-user
+Accept: application/json
+
+{
+  "Email": "mikeo@mialco.net",
+  UserName: "mikeo",
+  "Password:"MyGreatPassword"
+}
+
+post https://localhost:7150/api/Authentication/login-user
+
+Accept: application/json
+
+{
+  "Email": "mikeo1@mialco.com",Us"
