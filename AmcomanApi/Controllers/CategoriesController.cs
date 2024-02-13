@@ -3,6 +3,7 @@ using mialco.amcoman.repository;
 using mialco.amcoman.repository.abstraction;
 using mialco.amcoman.shared.Abstraction;
 using mialco.amcoman.shared.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ namespace AmcomanApi.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class CategoriesController : ControllerBase
 	{
 		private readonly ICategoriesAndGroupsRepository _repoCategoryAndGroup;
@@ -28,6 +30,7 @@ namespace AmcomanApi.Controllers
 		}
 		// GET: api/<CategoriesController>
 		[HttpGet]
+
 		public ActionResult<IEnumerable<Category>> Get()
 		{
 			var result = _repoCategoryAndGroup.GetAll().ToList();

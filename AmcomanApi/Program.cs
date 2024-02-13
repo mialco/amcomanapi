@@ -89,11 +89,11 @@ namespace AmcomanApi
 			.AddJwtBearer("JwtBearer", options =>
 			{
 				options.SaveToken = true;
-				options.RequireHttpsMetadata = false;
+				options.RequireHttpsMetadata = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuer = true, // Set this true if you have set the issuer in the JwtBearerOptions
-					ValidateAudience = true, //set this true if you have set the audience in the JwtBearerOptions
+					ValidateIssuer = false, // Set this true if you have set the issuer in the JwtBearerOptions
+					ValidateAudience = false, //set this true if you have set the audience in the JwtBearerOptions
 					ValidateLifetime = true,
 					ValidateIssuerSigningKey = true,
 					ValidIssuer = vars.JwtIssuer,
@@ -144,6 +144,7 @@ namespace AmcomanApi
 
 			var app = builder.Build();
 
+
 			app.UseExceptionHandler(errorApp =>
 			{
 				errorApp.Run(async context =>
@@ -168,6 +169,9 @@ namespace AmcomanApi
 				});
 			});
 
+
+
+
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{
@@ -184,8 +188,9 @@ namespace AmcomanApi
 			});
 			app.UseHttpsRedirection();
 
-			//app.UseAuthentication();
+			app.UseAuthentication();
 			app.UseAuthorization();
+
 
 
 			app.MapControllers();

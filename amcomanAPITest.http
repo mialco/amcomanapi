@@ -20,9 +20,27 @@ Accept: application/json
   "Password:"MyGreatPassword"
 }
 
-post https://localhost:7150/api/Authentication/login-user
-
-Accept: application/json
+###
+POST https://localhost:7150/api/Authentication/login-user
+Content-Type: application/json
 
 {
-  "Email": "mikeo1@mialco.com",Us"
+ "username" : "mikeo1",
+"password":"Mikeo1@mialco.com"
+}
+
+# Test Categories
+###
+GET https://localhost:7150/api/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWlrZW8xIiwianRpIjpbIjU3NDM3ZTJmLWQwNjctNDA0Yy05MzhkLTk3OGJiYzkxNWMwMCIsImIyMDQ5YjBlLWRiOTgtNGIwNi1iY2M1LThkMzdhMTJhNWE5ZCJdLCJlbWFpbCI6Im1pa2VvMUBtaWFsY28uY29tIiwic3ViIjoibWlrZW8xQG1pYWxjby5jb20iLCJleHAiOjE3MDc4MDA5NjksImlzcyI6Im1pYWxjby5uZXQiLCJhdWQiOiJtaWFsY28ubmV0In0.msRmdTnBNGFKUeTNQ6OeeZWmjUHFkQeG_lfLtcg43Jc
+
+
+
+
+
+###
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWlrZW8xIiwianRpIjpbIjU3NDM3ZTJmLWQwNjctNDA0Yy05MzhkLTk3OGJiYzkxNWMwMCIsImIyMDQ5YjBlLWRiOTgtNGIwNi1iY2M1LThkMzdhMTJhNWE5ZCJdLCJlbWFpbCI6Im1pa2VvMUBtaWFsY28uY29tIiwic3ViIjoibWlrZW8xQG1pYWxjby5jb20iLCJleHAiOjE3MDc4MDA5NjksImlzcyI6Im1pYWxjby5uZXQiLCJhdWQiOiJtaWFsY28ubmV0In0.msRmdTnBNGFKUeTNQ6OeeZWmjUHFkQeG_lfLtcg43Jc",
+  "refreshToken": "ee1081a3-cca9-4118-97d7-7b344488952f-d9641cc3-d51d-4202-b982-e7776819260c",
+  "expiresAt": "2024-02-13T05:09:29Z"
+}
