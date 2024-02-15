@@ -3,17 +3,23 @@ using mialco.amcoman.repository;
 using mialco.amcoman.repository.abstraction;
 using mialco.amcoman.shared.Abstraction;
 using mialco.amcoman.shared.Dto;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Serilog;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AmcomanApi.Controllers
 {
 	[Route("api/[controller]")]
-	[ApiController]
 	[Authorize]
 	public class CategoriesController : ControllerBase
 	{
@@ -30,7 +36,7 @@ namespace AmcomanApi.Controllers
 		}
 		// GET: api/<CategoriesController>
 		[HttpGet]
-
+		[Authorize]
 		public ActionResult<IEnumerable<Category>> Get()
 		{
 			var result = _repoCategoryAndGroup.GetAll().ToList();

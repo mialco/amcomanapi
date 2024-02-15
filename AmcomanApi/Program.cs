@@ -6,7 +6,7 @@ using mialco.amcoman.repository;
 using mialco.amcoman.repository.abstraction;
 using mialco.amcoman.shared;
 using mialco.amcoman.shared.Abstraction;
-using Microsoft.AspNetCore.Authentication.Google;
+//using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.DataProtection;
@@ -54,50 +54,44 @@ namespace AmcomanApi
 			var connectionString = configuration.GetConnectionString(SqlConnectionStringName);
 
 
-
-
-			// Add services to the container.
-			//builder.Services.AddScoped<IAflRepository<AflProduct>, AflMockRepo<AflProduct>>();
-			//builder.Services.AddScoped(DbContext, AmcomanContext);
-			//builder.Services.AddTransient(typeof(IAflRepository<AflProduct>), typeof(AflEFRepository<AflProduct>));
-			//builder.Services.AddScoped<IAflRepository<AflProduct>, AflEFRepository<AflProduct>>();
-
-			//builder.Services.AddScoped(IDbCon DbContext,app.dbContext)
-			//builder.Services.AddScoped<
-
-			//TODO: retrieve environment variables from the environment before configuring the JwtBearer	
-			// Show the error message if the environment variables are not set
-
-			builder.Services.AddLogging(//Cofigure serilog here
-										//
-										);
-			builder.Services.AddControllers();
-			builder.Services.AddEndpointsApiExplorer();
-
 			//Add Identity
-			builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-				.AddEntityFrameworkStores<AmcomanContext>()
-				.AddDefaultTokenProviders();
+			//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+			//	.AddEntityFrameworkStores<AmcomanContext>()
+			//	.AddDefaultTokenProviders();
+
+			builder.Services.AddIdentityCore<ApplicationUser>(options =>
+			{
+				options.Password.RequireDigit = true;
+				options.Password.RequiredLength = 8;
+				options.Password.RequireNonAlphanumeric = true;
+				options.Password.RequireUppercase = true;
+				options.Password.RequireLowercase = true;
+				options.User.RequireUniqueEmail = true;
+			})
+			.AddRoles<IdentityRole>()
+			.AddEntityFrameworkStores<AmcomanContext>()
+				;
 
 			//Add Authentication
 			builder.Services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+				//options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 			})
-			.AddJwtBearer("JwtBearer", options =>
+			.AddJwtBearer(options =>
 			{
 				options.SaveToken = true;
 				options.RequireHttpsMetadata = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuer = false, // Set this true if you have set the issuer in the JwtBearerOptions
-					ValidateAudience = false, //set this true if you have set the audience in the JwtBearerOptions
+					ValidateIssuer = true, // Set this true if you have set the issuer in the JwtBearerOptions
+					ValidateAudience = true, //set this true if you have set the audience in the JwtBearerOptions
 					ValidateLifetime = true,
 					ValidateIssuerSigningKey = true,
 					ValidIssuer = vars.JwtIssuer,
 					ValidAudience = vars.JwtIssuer,
+					ClockSkew = System.TimeSpan.Zero,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(vars.JwtKey)),
 				};
 			});
@@ -115,6 +109,19 @@ namespace AmcomanApi
 			//	//options.SaveTokens = true;
 			//});
 			/// configure serilog here
+
+
+
+
+
+			//TODO: retrieve environment variables from the environment before configuring the JwtBearer	
+			// Show the error message if the environment variables are not set
+
+			builder.Services.AddLogging(//Cofigure serilog here
+										//
+										);
+			builder.Services.AddControllers();
+			builder.Services.AddEndpointsApiExplorer();
 
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -145,29 +152,29 @@ namespace AmcomanApi
 			var app = builder.Build();
 
 
-			app.UseExceptionHandler(errorApp =>
-			{
-				errorApp.Run(async context =>
-				{
-					context.Response.StatusCode = 500;
-					context.Response.ContentType = "text/html";
-					await context.Response.WriteAsync("<html lang=\"en\"><body>\r\n");
-					await context.Response.WriteAsync("ERROR!<br><br>\r\n");
-					var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+			//app.UseExceptionHandler(errorApp =>
+			//{
+			//	errorApp.Run(async context =>
+			//	{
+			//		context.Response.StatusCode = 500;
+			//		context.Response.ContentType = "text/html";
+			//		await context.Response.WriteAsync("<html lang=\"en\"><body>\r\n");
+			//		await context.Response.WriteAsync("ERROR!<br><br>\r\n");
+			//		var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
 
-					// Use exceptionHandlerPathFeature to process the exception (for example, 
-					// logging), but do NOT expose sensitive error information directly to 
-					// the client.
-					if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
-					{
-						await context.Response.WriteAsync("File error thrown!<br><br>\r\n");
-					}
-					await context.Response.WriteAsync("<a href=\"/\">Home</a><br>\r\n");
-					await context.Response.WriteAsync("</body></html>\r\n");
-					await context.Response.WriteAsync(new string(' ', 512)); // Padding for IE
-					await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.ToString());
-				});
-			});
+			//		// Use exceptionHandlerPathFeature to process the exception (for example, 
+			//		// logging), but do NOT expose sensitive error information directly to 
+			//		// the client.
+			//		if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
+			//		{
+			//			await context.Response.WriteAsync("File error thrown!<br><br>\r\n");
+			//		}
+			//		await context.Response.WriteAsync("<a href=\"/\">Home</a><br>\r\n");
+			//		await context.Response.WriteAsync("</body></html>\r\n");
+			//		await context.Response.WriteAsync(new string(' ', 512)); // Padding for IE
+			//		await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.ToString());
+			//	});
+			//});
 
 
 
@@ -187,6 +194,9 @@ namespace AmcomanApi
 
 			});
 			app.UseHttpsRedirection();
+			
+			app.UseRouting(); //Not sure if needed
+
 
 			app.UseAuthentication();
 			app.UseAuthorization();

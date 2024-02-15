@@ -4,6 +4,7 @@ using mialco.amcoman.dal.Entity;
 using mialco.amcoman.shared;
 using mialco.amcoman.shared.Abstraction;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -86,13 +87,33 @@ namespace AmcomanApi.Controllers
 				new Claim(JwtRegisteredClaimNames.Jti,jti )
 			};
 			var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_vars.JwtKey));
+			var credentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
+			var roles = await _userManager.GetRolesAsync(user);
+			var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
+			var userClaims = await _userManager.GetClaimsAsync(user);
+			var claims = new List<Claim>{
+				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(JwtRegisteredClaimNames.Email, user.Email),
+				new Claim("uid", user.Id)
+			}.Union(userClaims).Union(roleClaims) ;
+
+			//var token = new JwtSecurityToken(
+			//	issuer: _vars.JwtIssuer,
+			//	audience: _vars.JwtIssuer,
+			//	expires: DateTime.UtcNow.AddMinutes(30), //Typical Time 1-3 minutes //TODO: Move to config
+			//	claims: authClaims,
+			//	signingCredentials: credentials
+			//);
+
 			var token = new JwtSecurityToken(
 				issuer: _vars.JwtIssuer,
 				audience: _vars.JwtIssuer,
 				expires: DateTime.UtcNow.AddMinutes(30), //Typical Time 1-3 minutes //TODO: Move to config
-				claims: authClaims,
-				signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+				claims: claims,
+				signingCredentials: credentials
 			);
+
 			var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
 			var refreshToken = new RefreshToken
 			{
@@ -115,6 +136,68 @@ namespace AmcomanApi.Controllers
 			return response;
 		}
 
+		private async Task<string> GenerateJwtToken1(ApplicationUser user)
+		{
+			var jti = Guid.NewGuid().ToString();
+			var authClaims = new List<Claim>()
+			{
+				new Claim(ClaimTypes.Name, user.UserName),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(JwtRegisteredClaimNames.Email, user.Email),
+				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+				new Claim(JwtRegisteredClaimNames.Jti,jti )
+			};
+			var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_vars.JwtKey));
+			var credentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
+			var roles = await _userManager.GetRolesAsync(user);
+			var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
+			var userClaims = await _userManager.GetClaimsAsync(user);
+			var claims = new List<Claim>{
+				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(JwtRegisteredClaimNames.Email, user.Email),
+				new Claim("uid", user.Id)
+			}.Union(userClaims).Union(roleClaims);
+
+			//var token = new JwtSecurityToken(
+			//	issuer: _vars.JwtIssuer,
+			//	audience: _vars.JwtIssuer,
+			//	expires: DateTime.UtcNow.AddMinutes(30), //Typical Time 1-3 minutes //TODO: Move to config
+			//	claims: authClaims,
+			//	signingCredentials: credentials
+			//);
+
+			var token = new JwtSecurityToken(
+				issuer: _vars.JwtIssuer,
+				audience: _vars.JwtIssuer,
+				expires: DateTime.UtcNow.AddMinutes(60), //Typical Time 1-3 minutes //TODO: Move to config
+				claims: claims,
+				signingCredentials: credentials
+			);
+
+			var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+			var refreshToken = new RefreshToken
+			{
+				JwtId = jti,
+				IsRevoked = false,
+				DateAdded = DateTime.UtcNow,
+				DateExpire = DateTime.UtcNow.AddMonths(6), //TODO: Move to config
+				Token = Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString(),
+				UserId = user.Id,
+			};
+			await _context.RefreshTokens.AddAsync(refreshToken); //todo: add to repo
+			await _context.SaveChangesAsync(); //todo: add to repo
+
+			var response = new AuthResultVm
+			{
+				Token = jwtToken,
+				RefreshToken = refreshToken.Token,
+				ExpiresAt = token.ValidTo
+			};
+			return new JwtSecurityTokenHandler().WriteToken(token);
+		}
+
+
 		//[HttpPost("login-user")]
 		//public async Task<IActionResult> LoginUser([FromBody] LoginVm payload)
 		//{
@@ -134,6 +217,7 @@ namespace AmcomanApi.Controllers
 		//	var result = await GenerateJwtToken(user);
 		//	return Ok(result);
 		//}
+
 
 		[HttpPost("login-user")]
 		public async Task<IActionResult> RefreshToken([FromBody] LoginVm payload)

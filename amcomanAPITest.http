@@ -1,7 +1,7 @@
 GET http://localhost:5000/weatherforecast
 
 ###
-GET https://localhost:7150/api/Products/1
+GET https://localhost:7150/api/Products
 
 ### 
 GET https://localhost:7150/api/Products?pageindex=1&pagesize=2
@@ -20,7 +20,7 @@ Accept: application/json
   "Password:"MyGreatPassword"
 }
 
-###
+### Login
 POST https://localhost:7150/api/Authentication/login-user
 Content-Type: application/json
 
@@ -29,18 +29,21 @@ Content-Type: application/json
 "password":"Mikeo1@mialco.com"
 }
 
-# Test Categories
-###
-GET https://localhost:7150/api/categories
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWlrZW8xIiwianRpIjpbIjU3NDM3ZTJmLWQwNjctNDA0Yy05MzhkLTk3OGJiYzkxNWMwMCIsImIyMDQ5YjBlLWRiOTgtNGIwNi1iY2M1LThkMzdhMTJhNWE5ZCJdLCJlbWFpbCI6Im1pa2VvMUBtaWFsY28uY29tIiwic3ViIjoibWlrZW8xQG1pYWxjby5jb20iLCJleHAiOjE3MDc4MDA5NjksImlzcyI6Im1pYWxjby5uZXQiLCJhdWQiOiJtaWFsY28ubmV0In0.msRmdTnBNGFKUeTNQ6OeeZWmjUHFkQeG_lfLtcg43Jc
-
-
-
-
 
 ###
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWlrZW8xIiwianRpIjpbIjU3NDM3ZTJmLWQwNjctNDA0Yy05MzhkLTk3OGJiYzkxNWMwMCIsImIyMDQ5YjBlLWRiOTgtNGIwNi1iY2M1LThkMzdhMTJhNWE5ZCJdLCJlbWFpbCI6Im1pa2VvMUBtaWFsY28uY29tIiwic3ViIjoibWlrZW8xQG1pYWxjby5jb20iLCJleHAiOjE3MDc4MDA5NjksImlzcyI6Im1pYWxjby5uZXQiLCJhdWQiOiJtaWFsY28ubmV0In0.msRmdTnBNGFKUeTNQ6OeeZWmjUHFkQeG_lfLtcg43Jc",
-  "refreshToken": "ee1081a3-cca9-4118-97d7-7b344488952f-d9641cc3-d51d-4202-b982-e7776819260c",
-  "expiresAt": "2024-02-13T05:09:29Z"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWlrZW8xIiwianRpIjpbImY2NDIwN2MzLTZmODEtNDBhMy04ZDUzLTI0ZjU0N2M5OGZmMCIsImZlYmM4ODlhLTkzNzQtNGY0NS1iNTFkLThiNzRkY2YzZDBkOSJdLCJlbWFpbCI6Im1pa2VvMUBtaWFsY28uY29tIiwic3ViIjoibWlrZW8xQG1pYWxjby5jb20iLCJleHAiOjE3MDc4MDQ2NjksImlzcyI6Im1pYWxjby5uZXQiLCJhdWQiOiJtaWFsY28ubmV0In0.jJV4iIZOVac2wHwsQDch-zJZ7kDu9xwhTpuKkfVifn8",
+  "refreshToken": "b9b15e12-5761-4a6a-8ebc-79a626c893c7-e84e182c-544b-4376-a33e-12397ed4b045",
+  "expiresAt": "2024-02-13T06:11:09Z"
 }
+
+// My Key is : Amcoman@MialcoAtLeast16character-Long-key
+# Test Categories
+###
+GET https://localhost:7150/api/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtaWtlbzFAbWlhbGNvLmNvbSIsImp0aSI6ImIzOWM2ZmM0LTg2ZmQtNGIyNC1iNTQ3LTZlOTQwZWZkM2Q2ZCIsImVtYWlsIjoibWlrZW8xQG1pYWxjby5jb20iLCJ1aWQiOiJkOTRlMDMzNi1mYzBkLTQ4ZmEtYmQ4MS04MjdjOTYyNTc4YTQiLCJleHAiOjE3MDc5NzU1MjIsImlzcyI6Im1pYWxjby5uZXQiLCJhdWQiOiJtaWFsY28ubmV0In0.6aTj5NsIcqQWd4e42ULWxkMzyWs_aTZOV3TKgSYmo6o
+
+
+
+
+
