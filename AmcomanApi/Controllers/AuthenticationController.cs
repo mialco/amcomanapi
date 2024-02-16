@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace AmcomanApi.Controllers
 {
@@ -24,14 +25,17 @@ namespace AmcomanApi.Controllers
 		private readonly AmcomanContext _context;
 		private readonly IConfiguration _configuartion;
 		private readonly IAmcomanVars _vars;
+		private readonly TokenValidationParameters _tokenValidationParameters;
+		
 
-		public AuthenticationController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AmcomanContext context, IConfiguration configuration, IAmcomanVars vars)
+		public AuthenticationController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AmcomanContext context, IConfiguration configuration, IAmcomanVars vars, TokenValidationParameters tokenValidationParameters)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
 			_context = context;
 			_configuartion = configuration;
 			_vars = vars;
+			_tokenValidationParameters = tokenValidationParameters;
 		}
 
 		[HttpPost("register-user")]
@@ -75,7 +79,7 @@ namespace AmcomanApi.Controllers
 			return CreatedAtAction(nameof(RegisterUser), new { id = newUser.Id }, newUser);
 		}
 
-		private async Task<AuthResultVm> GenerateJwtToken(ApplicationUser user)
+		private async Task<AuthResultVm> GenerateJwtTokenAsync(ApplicationUser user, string existingRefreshToken)
 		{
 			var jti = Guid.NewGuid().ToString();
 			var authClaims = new List<Claim>()
@@ -109,118 +113,39 @@ namespace AmcomanApi.Controllers
 			var token = new JwtSecurityToken(
 				issuer: _vars.JwtIssuer,
 				audience: _vars.JwtIssuer,
-				expires: DateTime.UtcNow.AddMinutes(30), //Typical Time 1-3 minutes //TODO: Move to config
+				expires: DateTime.UtcNow.AddMinutes(1), //Typical Time 1-3 minutes //TODO: Move to config
 				claims: claims,
 				signingCredentials: credentials
 			);
 
 			var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-			var refreshToken = new RefreshToken
+			var refreshToken = new RefreshToken();
+			if (string.IsNullOrEmpty(existingRefreshToken))
 			{
-				JwtId = jti,
-				IsRevoked = false,
-				DateAdded = DateTime.UtcNow,
-				DateExpire = DateTime.UtcNow.AddMonths(6), //TODO: Move to config
-				Token = Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString(),
-				UserId = user.Id,
-			};
-			await _context.RefreshTokens.AddAsync(refreshToken); //todo: add to repo
-			await _context.SaveChangesAsync(); //todo: add to repo
+				refreshToken = new RefreshToken
+				{
+					JwtId = jti,
+					IsRevoked = false,
+					DateAdded = DateTime.UtcNow,
+					DateExpire = DateTime.UtcNow.AddMonths(6), //TODO: Move to config
+					Token = Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString(),
+					UserId = user.Id,
+				};
+				await _context.RefreshTokens.AddAsync(refreshToken); //todo: add to repo
+				await _context.SaveChangesAsync(); //todo: add to repo
+			}
 
 			var response = new AuthResultVm
 			{
 				Token = jwtToken,
-				RefreshToken = refreshToken.Token,
+				RefreshToken = (string.IsNullOrEmpty(existingRefreshToken)) ? refreshToken.Token: existingRefreshToken,
 				ExpiresAt = token.ValidTo
 			};
 			return response;
 		}
 
-		private async Task<string> GenerateJwtToken1(ApplicationUser user)
-		{
-			var jti = Guid.NewGuid().ToString();
-			var authClaims = new List<Claim>()
-			{
-				new Claim(ClaimTypes.Name, user.UserName),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(JwtRegisteredClaimNames.Email, user.Email),
-				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-				new Claim(JwtRegisteredClaimNames.Jti,jti )
-			};
-			var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_vars.JwtKey));
-			var credentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
-			var roles = await _userManager.GetRolesAsync(user);
-			var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
-			var userClaims = await _userManager.GetClaimsAsync(user);
-			var claims = new List<Claim>{
-				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(JwtRegisteredClaimNames.Email, user.Email),
-				new Claim("uid", user.Id)
-			}.Union(userClaims).Union(roleClaims);
-
-			//var token = new JwtSecurityToken(
-			//	issuer: _vars.JwtIssuer,
-			//	audience: _vars.JwtIssuer,
-			//	expires: DateTime.UtcNow.AddMinutes(30), //Typical Time 1-3 minutes //TODO: Move to config
-			//	claims: authClaims,
-			//	signingCredentials: credentials
-			//);
-
-			var token = new JwtSecurityToken(
-				issuer: _vars.JwtIssuer,
-				audience: _vars.JwtIssuer,
-				expires: DateTime.UtcNow.AddMinutes(60), //Typical Time 1-3 minutes //TODO: Move to config
-				claims: claims,
-				signingCredentials: credentials
-			);
-
-			var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-			var refreshToken = new RefreshToken
-			{
-				JwtId = jti,
-				IsRevoked = false,
-				DateAdded = DateTime.UtcNow,
-				DateExpire = DateTime.UtcNow.AddMonths(6), //TODO: Move to config
-				Token = Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString(),
-				UserId = user.Id,
-			};
-			await _context.RefreshTokens.AddAsync(refreshToken); //todo: add to repo
-			await _context.SaveChangesAsync(); //todo: add to repo
-
-			var response = new AuthResultVm
-			{
-				Token = jwtToken,
-				RefreshToken = refreshToken.Token,
-				ExpiresAt = token.ValidTo
-			};
-			return new JwtSecurityTokenHandler().WriteToken(token);
-		}
-
-
-		//[HttpPost("login-user")]
-		//public async Task<IActionResult> LoginUser([FromBody] LoginVm payload)
-		//{
-		//	if (!ModelState.IsValid)
-		//	{
-		//		return BadRequest(ModelState);
-		//	}
-
-		//	//todo: allow login with emailor user name as well
-		//	var user = await _userManager.FindByNameAsync(payload.UserName);
-		//	if (user == null || !await _userManager.CheckPasswordAsync(user, payload.Password))
-		//	{
-		//		Log.Error("User [{User}] not found or password is incorrect", payload.UserName);
-		//		return Unauthorized();
-		//	}
-		//	Log.Information("User [{User}] logged in", payload.UserName);
-		//	var result = await GenerateJwtToken(user);
-		//	return Ok(result);
-		//}
-
-
 		[HttpPost("login-user")]
-		public async Task<IActionResult> RefreshToken([FromBody] LoginVm payload)
+		public async Task<IActionResult> LoginUser([FromBody] LoginVm payload)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -255,7 +180,7 @@ namespace AmcomanApi.Controllers
 
 				if (isValid)
 				{
-					var result = await GenerateJwtToken(user);
+					var result = await GenerateJwtTokenAsync(user,string.Empty);
 					return Ok(result);
 				}
 				else
@@ -271,5 +196,89 @@ namespace AmcomanApi.Controllers
 			}
 		}
 
+		[HttpPost("refresh-token")]
+		public async Task<IActionResult> RefreshToken([FromBody] TokenRequestVm payload)
+		{
+			try
+			{
+				var result = await VerifyAndGenerateTokenAsync(payload);
+				if (result == null)
+				{
+					return BadRequest("Invalid Token");
+				}
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return	BadRequest(ex.Message);
+			}
+		}
+
+		private async Task<AuthResultVm> VerifyAndGenerateTokenAsync(TokenRequestVm payload)
+		{
+			try
+			{
+				//1. verify the jwt token format
+				var jwtTokenHandler = new JwtSecurityTokenHandler();
+				var tokenInVerification = jwtTokenHandler.ValidateToken(payload.Token, _tokenValidationParameters, out var validatedToken);
+
+				//2. check the encryption algorithm
+				if (validatedToken is JwtSecurityToken jwtSecurityToken)
+				{
+					var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
+					if (result == false)
+					{
+						return null;
+					}
+				}
+
+				//3. check expiry date
+				var utcexpiryDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+				var expiryDate = UnixTimeStampToDateTimeInUTC(utcexpiryDate);
+				if (expiryDate > DateTime.UtcNow) throw new Exception("This token hasn't expired yet");
+				//4. check if the token exists in the database
+				var dbRefreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == payload.RefreshToken);
+				if (dbRefreshToken == null)
+				{
+					throw new Exception("This refresh token does not exist");
+				}
+				else
+				{
+					//5. check if the token has been revoked
+					var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+					if (dbRefreshToken.JwtId != jti) throw new Exception("This refresh token does not match this JWT token");
+					//6. check if the token has expired
+					if (dbRefreshToken.DateExpire <= DateTime.UtcNow) throw new Exception("This refresh token has expired, please re-authenticate");
+					//7. check if the token is revoked
+					if (dbRefreshToken.IsRevoked) throw new Exception("This refresh token has been revoked");
+					//Generate new token(with existing refresh token)
+					var dbUserData = await _userManager.FindByIdAsync(dbRefreshToken.UserId);
+					var newTokenResponse = GenerateJwtTokenAsync(dbUserData, payload.RefreshToken);
+					return await newTokenResponse;
+				}
+
+			}
+			catch (SecurityTokenExpiredException)
+			{
+				//Generate new token(with existing refresh token)
+				var dbRefreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == payload.RefreshToken);
+				var dbUserData = await _userManager.FindByIdAsync(dbRefreshToken.UserId);
+				var newTokenResponse = GenerateJwtTokenAsync(dbUserData, payload.RefreshToken);
+				return await newTokenResponse;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+
+
+		}
+
+		private DateTime UnixTimeStampToDateTimeInUTC(long utcexpityDate)
+		{
+			var datetimevalue = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+			datetimevalue= datetimevalue.AddSeconds(utcexpityDate).ToUniversalTime();
+			return datetimevalue;
+		}
 	}
 }

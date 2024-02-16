@@ -54,6 +54,21 @@ namespace AmcomanApi
 			var connectionString = configuration.GetConnectionString(SqlConnectionStringName);
 
 
+			//TokenValidationParameters tokenValidationParameters = new TokenValidationParameters
+			var tokenValidationParameters =  new TokenValidationParameters
+			{
+				ValidateIssuer = true, // Set this true if you have set the issuer in the JwtBearerOptions
+				ValidateAudience = true, //set this true if you have set the audience in the JwtBearerOptions
+				ValidateLifetime = true,
+				ValidateIssuerSigningKey = true,
+				ValidIssuer = vars.JwtIssuer,
+				ValidAudience = vars.JwtIssuer,
+				ClockSkew = System.TimeSpan.Zero,
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(vars.JwtKey)),
+				
+			};
+
+			builder.Services.AddSingleton(tokenValidationParameters);
 			//Add Identity
 			//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 			//	.AddEntityFrameworkStores<AmcomanContext>()
@@ -83,17 +98,7 @@ namespace AmcomanApi
 			{
 				options.SaveToken = true;
 				options.RequireHttpsMetadata = true;
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true, // Set this true if you have set the issuer in the JwtBearerOptions
-					ValidateAudience = true, //set this true if you have set the audience in the JwtBearerOptions
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
-					ValidIssuer = vars.JwtIssuer,
-					ValidAudience = vars.JwtIssuer,
-					ClockSkew = System.TimeSpan.Zero,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(vars.JwtKey)),
-				};
+				options.TokenValidationParameters = tokenValidationParameters;
 			});
 			//.AddOAuth("OAuth", options =>
 			//{
