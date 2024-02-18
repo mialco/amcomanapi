@@ -13,14 +13,16 @@ using Microsoft.AspNetCore.Identity;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using mialco.amcoman.shared.Constants;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AmcomanApi.Controllers
 {
+
 	[Route("api/[controller]")]
-	[Authorize]
+	[Authorize(Roles =UserRolesNames.AllRoles)]
 	public class CategoriesController : ControllerBase
 	{
 		private readonly ICategoriesAndGroupsRepository _repoCategoryAndGroup;
@@ -39,6 +41,13 @@ namespace AmcomanApi.Controllers
 		[Authorize]
 		public ActionResult<IEnumerable<Category>> Get()
 		{
+			//Getting user info if the user is logged in
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get user ID
+			if (userId != null)
+			{
+				string username = User.Identity.Name; // Get username
+			}
+
 			var result = _repoCategoryAndGroup.GetAll().ToList();
 			return Ok(result);
 		}

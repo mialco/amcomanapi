@@ -13,5 +13,7 @@ namespace AmcomanApi.ViewModel.Authentication
 		[Required(ErrorMessage="Password is required")]
 		public string Password { get; set; }
 		public string ConfirmPassword { get; set; }
+		public string? Role { get; set; }
+
 	}
 }

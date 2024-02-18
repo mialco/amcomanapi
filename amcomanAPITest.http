@@ -12,12 +12,15 @@ GET https://localhost:7150/api/Products?pageindex=1&pagesize=2
 /// Test Identity
 
 POST https://localhost:7150/api/Authentication/register-user
-Accept: application/json
+Content-Type: application/json
 
 {
-  "Email": "mikeo@mialco.net",
-  UserName: "mikeo",
-  "Password:"MyGreatPassword"
+  "Email": "mikeo3@mialco.net",
+  "UserName": "mikeo1",
+  "Password":"*",
+  "ConfirmPassword":"*",
+  "FirstName":"Mike",
+  "LastName":"Ola"
 }
 
 ### Login
@@ -26,7 +29,7 @@ Content-Type: application/json
 
 {
  "username" : "mikeo1",
-"password":"Mikeo1"
+"password":"****"
 }
 
 
@@ -52,6 +55,9 @@ Content-Type: application/json
  
 GET https://localhost:7150/api/categories
 Authorization: Bearer 
+
+
+
 
 
 

@@ -1,6 +1,8 @@
 ﻿using mialco.amcoman.dal;
 using mialco.amcoman.dal.Entity;
 using mialco.amcoman.mockRepo;
+using mialco.amcoman.shared.Constants;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +54,31 @@ namespace AmcomanApi
 				}
 			}
 		
+		}
+		public static async Task SeedRoles(IApplicationBuilder applicationBuilder )
+		{
+			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+			{
+				var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+
+				if (!await roleManager.RoleExistsAsync(UserRolesNames.Admin))
+				{
+					await roleManager.CreateAsync(new IdentityRole(UserRolesNames.Admin));
+				}
+				if (!await roleManager.RoleExistsAsync(UserRolesNames.User))
+				{
+					await roleManager.CreateAsync(new IdentityRole(UserRolesNames.User));
+				}
+				if (!await roleManager.RoleExistsAsync(UserRolesNames.Guest))
+				{
+					await roleManager.CreateAsync(new IdentityRole(UserRolesNames.Guest));
+				}
+				if (!await roleManager.RoleExistsAsync(UserRolesNames.ContentManager))
+				{
+					await roleManager.CreateAsync(new IdentityRole(UserRolesNames.ContentManager));
+				}
+			}
 		}
 	}
 }

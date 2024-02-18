@@ -211,6 +211,8 @@ namespace AmcomanApi
 			app.MapControllers();
 
 			DbDataInitializer.Seed(app);
+			DbDataInitializer.SeedRoles(app);
+
 			app.Run();
 
 		}

@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
+using mialco.amcoman.shared.Constants;
 
 namespace AmcomanApi.Controllers
 {
@@ -76,6 +77,29 @@ namespace AmcomanApi.Controllers
 				}
 				return BadRequest(ModelState);
 			}
+
+			if (string.IsNullOrEmpty(payload.Role))
+			{
+				payload.Role = UserRolesNames.User;
+			}
+			switch (payload.Role)
+			{
+				case UserRolesNames.Admin:
+					await _userManager.AddToRoleAsync(newUser, UserRolesNames.Admin);
+					break;
+				case UserRolesNames.User:
+					await _userManager.AddToRoleAsync(newUser, UserRolesNames.User);
+					break;
+				case UserRolesNames.Guest:
+					await _userManager.AddToRoleAsync(newUser, UserRolesNames.Guest);
+					break;
+				case UserRolesNames.ContentManager:
+					await _userManager.AddToRoleAsync(newUser, UserRolesNames.ContentManager);
+					break;
+				default:
+					await _userManager.AddToRoleAsync(newUser, UserRolesNames.User);
+					break;
+			}
 			return CreatedAtAction(nameof(RegisterUser), new { id = newUser.Id }, newUser);
 		}
 
@@ -90,6 +114,10 @@ namespace AmcomanApi.Controllers
 				new Claim(JwtRegisteredClaimNames.Sub, user.Email),
 				new Claim(JwtRegisteredClaimNames.Jti,jti )
 			};
+
+			//Add roles to the token
+			//var userRoles = await _userManager.GetRolesAsync(user);
+
 			var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_vars.JwtKey));
 			var credentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
 			var roles = await _userManager.GetRolesAsync(user);
@@ -100,8 +128,8 @@ namespace AmcomanApi.Controllers
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 				new Claim(JwtRegisteredClaimNames.Email, user.Email),
 				new Claim("uid", user.Id)
-			}.Union(userClaims).Union(roleClaims) ;
-
+			}.Union(userClaims).Union(roleClaims) ;			
+			//This token did not work
 			//var token = new JwtSecurityToken(
 			//	issuer: _vars.JwtIssuer,
 			//	audience: _vars.JwtIssuer,
@@ -109,11 +137,12 @@ namespace AmcomanApi.Controllers
 			//	claims: authClaims,
 			//	signingCredentials: credentials
 			//);
-
+			var expiryInMinutes = _configuartion.GetValue<int>("Jwt:ExpiryInMinutes");
+			var refreshTokenExpiryInDays = _configuartion.GetValue<int>("Jwt:RefreshTokenExpiryInDays");
 			var token = new JwtSecurityToken(
 				issuer: _vars.JwtIssuer,
 				audience: _vars.JwtIssuer,
-				expires: DateTime.UtcNow.AddMinutes(1), //Typical Time 1-3 minutes //TODO: Move to config
+				expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
 				claims: claims,
 				signingCredentials: credentials
 			);
@@ -127,7 +156,7 @@ namespace AmcomanApi.Controllers
 					JwtId = jti,
 					IsRevoked = false,
 					DateAdded = DateTime.UtcNow,
-					DateExpire = DateTime.UtcNow.AddMonths(6), //TODO: Move to config
+					DateExpire = DateTime.UtcNow.AddDays(refreshTokenExpiryInDays),
 					Token = Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString(),
 					UserId = user.Id,
 				};
@@ -180,6 +209,7 @@ namespace AmcomanApi.Controllers
 
 				if (isValid)
 				{
+					
 					var result = await GenerateJwtTokenAsync(user,string.Empty);
 					return Ok(result);
 				}
