@@ -24,3 +24,6 @@
 
 		[System.Environment]::SetEnvironmentVariable("JwtKey", "your-secret-key", "Machine")
 		[System.Environment]::SetEnvironmentVariable("Jwt:Issuer", "your-secret-key", "Machine")
+
+# User registration:
+For user registrattion, if the role is not provided, (user self registration), then the user will be assigne automatincallu to the "User" role. If the role is provided, then the user will be assigned to the role provided.

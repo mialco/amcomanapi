@@ -128,7 +128,8 @@ namespace AmcomanApi.Controllers
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 				new Claim(JwtRegisteredClaimNames.Email, user.Email),
 				new Claim("uid", user.Id)
-			}.Union(userClaims).Union(roleClaims) ;			
+			}.Union(userClaims).Union(roleClaims) ;
+			
 			//This token did not work
 			//var token = new JwtSecurityToken(
 			//	issuer: _vars.JwtIssuer,

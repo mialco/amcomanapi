@@ -27,17 +27,19 @@ Content-Type: application/json
 POST https://localhost:7150/api/Authentication/login-user
 Content-Type: application/json
 
-{
- "username" : "mikeo1",
-"password":"****"
-}
+{"userName":"mikeo5@mialco.com","password":"Myverysolid!1"}
 
+
+# {
+#  "username" : "mikeo1",
+# "password":"Mikeo1@mialco.com"
+# }
 
 ###
 
 // My Key is : Amcoman@MialcoAtLeast16character-Long-key
 # Test Categories
-###
+###M
 
 ### Refresh Token
 

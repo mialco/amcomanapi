@@ -23,6 +23,7 @@ namespace AmcomanApi.Controllers
 
 	[Route("api/[controller]")]
 	[Authorize(Roles =UserRolesNames.AllRoles)]
+	[AllowAnonymous]
 	public class CategoriesController : ControllerBase
 	{
 		private readonly ICategoriesAndGroupsRepository _repoCategoryAndGroup;
@@ -68,6 +69,21 @@ namespace AmcomanApi.Controllers
 		public ActionResult<IEnumerable<CategoryGroup>> GetGroups()
 		{
 			var result = _repoGroup.GetAll().ToList();
+			return Ok(result);
+		}
+
+
+		// GET: api/<CategoriesController>
+		[HttpGet]
+		[Route("Groups/view")]
+		public ActionResult<IEnumerable<CategoryGroupListViewDto>> GetGroupsView()
+		{
+			var result = _repoGroup.GetAll().Select(x=>
+			new CategoryGroupListViewDto { 
+			Id =x.Id,
+			GroupDescription = x.GroupDescription,
+			GroupName = x.GroupName
+			}).ToList();			
 			return Ok(result);
 		}
 
