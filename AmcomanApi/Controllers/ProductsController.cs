@@ -24,11 +24,24 @@ namespace AmcomanApi.Controllers
 		}
 		// GET: api/<ProductsController>
 		[HttpGet]
-		public  IEnumerable<AflProduct> Get(int pageIndex, int pageSize)
+		public IEnumerable<AflProduct> Get(int pageIndex, int pageSize)
 		{
-			return _productRepository.GetAll(pageIndex,pageSize);
+			return _productRepository.GetAll(pageIndex, pageSize);
 		}
-
+		/// <summary>
+		/// localhost:4200/products/list?categories=8
+		/// </summary>
+		/// <param name="categories - comma delimited list of categories"></param>
+		/// <param name="pageIndex"></param>
+		/// <param name="pageSize"></param>
+		/// <example>localhost:4200/products/list?categories=8,12,22&pageindex=1&pagesize=2</example>
+		/// <returns></returns>&pageindex=1&pagesize=2
+		// GET: api/<ProductsController>
+		[HttpGet("list")]
+		public IEnumerable<AflProduct> Get(string categories,int pageIndex, int pageSize)		
+		{
+			return _productRepository.GetAll();
+		}
 		// GET api/<ProductsController>/5
 		[HttpGet("{id}")]
 		public AflProduct Get(int id)

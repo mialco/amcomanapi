@@ -133,16 +133,17 @@ namespace AmcomanApi.Controllers
 			}
 			else
 			{
-				cat = _repoCategoryAndGroup.GetCategoriesWithGroupsBasic(true)
-					.Select(x => new CategoryAndGroupDto
-					{
-						CategoryGroupId = x.CategoryGroupId,
-						CategoryId = x.CategoryId,
-						Name = x.Name,
-						Description = x.Description,
-						GroupName = x.GroupName,
-						ParentId = x.ParentId
-					});
+				cat= new List<CategoryAndGroupDto>();
+				//cat = _repoCategoryAndGroup.GetCategoriesWithGroupsBasic(true)
+				//	.Select(x => new CategoryAndGroupDto
+				//	{
+				//		CategoryGroupId = x.CategoryGroupId,
+				//		CategoryId = x.CategoryId,
+				//		Name = x.Name,
+				//		Description = x.Description,
+				//		GroupName = x.GroupName,
+				//		ParentId = x.ParentId
+				//	});
 			}
 
 			result = _apiUtils.BuildCategoryTree(cat.ToList()); ;
