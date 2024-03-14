@@ -11,8 +11,9 @@ namespace mialco.amcoman.dal.Entity
 		[Column("Id")]
 		[Key]
 		public int Id { get; set; }	
-		public int ProdId { get; set; }
-		public int CatID { get; set; }
+		[ForeignKey("AflProduct")]
+		public long AflProductId { get; set; }
+		public int CategoryId { get; set; }
 		public virtual AflProduct AflProduct { get; set; }
 		public virtual Category Category { get; set; }
 		public DateTime CreatedAt { get; set; }

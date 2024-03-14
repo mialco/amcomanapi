@@ -27,3 +27,10 @@
 
 # User registration:
 For user registrattion, if the role is not provided, (user self registration), then the user will be assigne automatincallu to the "User" role. If the role is provided, then the user will be assigned to the role provided.
+
+
+# Workflow for pagination and filtering
+1. The client sends a request to the server with the page number and page size as query parameters.
+2. The server retrieves the page number and page size from the query parameters and uses them to calculate the number of items to skip and the number of items to take.
+1. The server retrieves the items from the database using the skip and take values.
+1. The client receives the items and the total number of items from the server and uses them to display the items and create the pagination controls.

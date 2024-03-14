@@ -42,9 +42,7 @@ namespace mialco.amcoman.dal.Entity
 
 		//[ForeignKey("ProdID")]
 		//public virtual AflProductDetail AflProductDetail { get; set; }
-
-		//[ForeignKey("ProdID")]
-		//public virtual IEnumerable<AflProducts_Categorie> AflProducts_Categories { get; set; }
+		public virtual IEnumerable<AflProduct_Categorie> AflProducts_Categories { get; set; }
 
 
 	}

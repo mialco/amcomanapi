@@ -1,8 +1,10 @@
-﻿using mialco.amcoman.dal;
+﻿using AmcomanApi.ViewModel;
+using mialco.amcoman.dal;
 using mialco.amcoman.dal.Abstraction;
 using mialco.amcoman.dal.Entity;
 using mialco.amcoman.repository;
 using mialco.amcoman.repository.abstraction;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +16,11 @@ namespace AmcomanApi.Controllers
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
-		private IAflRepository<AflProduct> _productRepository; //= new AflEFRepository<AflProduct>(AmcomanContext);
+		//private IAflRepository<AflProduct> _productRepository; //= new AflEFRepository<AflProduct>(AmcomanContext);
+		private IProductRepository _productRepository;
 		//private DbContext _context;
-
-		public ProductsController(IAflRepository<AflProduct> productRepository) 
+		
+		public ProductsController(IProductRepository productRepository) 
 		{ 
 			_productRepository = productRepository;
 		
@@ -38,9 +41,66 @@ namespace AmcomanApi.Controllers
 		/// <returns></returns>&pageindex=1&pagesize=2
 		// GET: api/<ProductsController>
 		[HttpGet("list")]
-		public IEnumerable<AflProduct> Get(string categories,int pageIndex, int pageSize)		
+		public ProductsVm Get(string categories,int currentPage, int pageSize)		
 		{
-			return _productRepository.GetAll();
+			if (currentPage<=0 )
+				pageSize = 1;
+
+			if (pageSize <= 0)
+				return new ProductsVm(currentPage, pageSize);
+
+			if (string.IsNullOrEmpty(categories))
+			{
+				return new ProductsVm (currentPage, pageSize);
+			}
+			var categoryList = categories.Split(',').Select(x=> {
+			int result;
+				int.TryParse(x, out result);
+				return result;
+			});
+			if (categoryList == null || categoryList.Count() == 0)
+			{
+				return new ProductsVm(currentPage, pageSize);
+			} 
+
+			var productsCount = _productRepository.Count(categoryList);
+			if (productsCount == 0)
+			{
+				return new ProductsVm (currentPage,pageSize);
+			}
+			var products =  _productRepository.GetProductsByCategoryList(categoryList, currentPage, pageSize);
+			
+			var result = new ProductsVm(currentPage, pageSize)
+			{
+			};
+
+			result.Pagination.TotalPages = (int)System.Math.Ceiling((decimal)productsCount / pageSize);
+			result.Pagination.TotalItems = productsCount;
+			if (currentPage > result.Pagination.TotalPages || currentPage < 1)
+			{
+				return result;
+			}
+			foreach (var product in products)
+			{
+				var productVm = new ProductVm
+				{
+					Id = product.Id,
+					ProductName = product.ProductName,
+					Description = product.Description,
+					ImgUrl = product.ImgUrl,
+					Price = product.Price,
+					ImgAlt = product.ImgAlt,
+					ImgDescription = product.ImgDescription,
+					NavigateUrl = product.NavigateUrl
+				};
+				result.AddProduct(productVm);
+			}
+			if (result.Pagination == null)
+			{
+				result.Pagination = new PaginationVm();
+			}
+				
+			return result;
 		}
 		// GET api/<ProductsController>/5
 		[HttpGet("{id}")]
@@ -56,7 +116,7 @@ namespace AmcomanApi.Controllers
 		//}
 
 		//// PUT api/<ProductsController>/5
-		//[HttpPut("{id}")]
+		//[HttpPut("{id}")]`	 
 		//public void Put(int id, [FromBody] string value)
 		//{
 		//}

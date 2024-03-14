@@ -28,6 +28,7 @@ namespace mialco.amcoman.dal
  			base.OnModelCreating(modelBuilder);
 			//modelBuilder.Entity<AflProduct>().
 			modelBuilder.ApplyConfiguration<IdentityRole>(new RoleConfiguration());
+			modelBuilder.Entity<AflProduct_Categorie>().HasOne(p => p.AflProduct).WithMany(p => p.AflProducts_Categories).HasForeignKey(p => p.AflProductId);
 		}
 	}
 
