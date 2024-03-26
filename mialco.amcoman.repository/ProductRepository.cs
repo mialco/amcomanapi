@@ -21,7 +21,7 @@ namespace mialco.amcoman.repository
 		}
 		public AflProduct Get(int id)
 		{
-			return _productSet.Find(id);
+			return _productSet.FirstOrDefault(p => p.Id == id);
 		}
 
 		public IEnumerable<AflProduct> GetAll(int page, int pageSize)
@@ -61,7 +61,7 @@ namespace mialco.amcoman.repository
 				//			  select p).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 				var result = _productSet.Include(p => p.AflProducts_Categories)
 					.Where(p => categoryIds.Contains(p.AflProducts_Categories.FirstOrDefault().CategoryId))
-					.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+					.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();				
 				return result;
 			}
 		}
