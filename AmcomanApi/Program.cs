@@ -151,6 +151,8 @@ namespace AmcomanApi
 			builder.Services.AddScoped(typeof(IAflRepository<>), typeof(AflEFRepository<>));
 			builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
 			builder.Services.AddScoped(typeof(IGroupsRepository), typeof(GroupsRepository));
+			builder.Services.AddScoped(typeof(ITopicsRepository<Topic>), typeof(TopicRepository));
+			builder.Services.AddScoped(typeof(ITopicsRepository<TopicTemplate>), typeof(TopicTemplateRepository));
 			builder.Services.AddSingleton<IAmcomanApiUtils, AmcomanApiUtils>();
 			builder.Services.AddSingleton<IAmcomanVars>(vars);
 			builder.Services.AddSingleton<IConfiguration>(configuration);

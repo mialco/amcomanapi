@@ -21,7 +21,8 @@ namespace mialco.amcoman.dal
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<Category_CategoryGroup> Categories_CategoryGroups { get; set; }
 		public DbSet<CategoryGroup> CategoryGroups { get; set; }
-
+		public DbSet<Topic> Topics { get; set; }
+		public DbSet<TopicTemplate> TopicTemplates { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

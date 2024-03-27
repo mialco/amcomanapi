@@ -52,6 +52,53 @@ namespace AmcomanApi
 
 					context.SaveChanges();
 				}
+
+				if (! context.TopicTemplates.Any())
+				{
+					var mockRepo = new AflMockRepo<TopicTemplate>();
+					var topicTemplates = new List<TopicTemplate>
+					{
+						new TopicTemplate
+						{
+							
+							Name = "Default",
+							Body = "",
+							Description = "Default Description",					
+							CreatedAt = DateTime.Now,
+							LastUpdated = DateTime.Now
+						}
+					};
+					context.AddRange(topicTemplates);
+					context.SaveChanges();
+
+				}
+				if (! context.Topics.Any())
+				{
+					var mockRepo = new AflMockRepo<Topic>();
+					var topics = new List<Topic>
+					{
+						new Topic
+						{
+							Name = "Home",
+							Title = "Home Text",
+							Body = "Default Body",
+							Description = "Default Description",
+							IncludeInSitemap = false,
+							IncludeInUserMenu = false,
+							IncludeInUserFooter = false,
+							Order = 1,
+							MetaKeywords = "Default MetaKeywords",
+							MetaDescription = "Default MetaDescription",
+							MetaTitle = "Default MetaTitle",
+							IsActive = true,
+							TopicTemplateId = 1,
+							CreatedAt = DateTime.Now,
+							LastUpdated = DateTime.Now
+						}
+					};
+					context.AddRange(topics);
+					context.SaveChanges();
+				}
 			}
 		
 		}
